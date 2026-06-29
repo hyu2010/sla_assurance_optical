@@ -9,19 +9,19 @@ number:
 date:
 consensus: true
 v: 3
-area: Routing
-workgroup: CCAMP Working Group
+area: "Routing"
+workgroup: "Common Control and Measurement Plane"
 keyword:
  - next generation
  - unicorn
  - sparkling distributed ledger
 venue:
-  group: CCAMP Working Group
-  type: Working Group
-  mail: WG@example.com
-  arch: https://example.com/WG
-  github: USER/REPO
-  latest: https://example.com/LATEST
+  group: "Common Control and Measurement Plane"
+  type: "Working Group"
+  mail: "ccamp@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/ccamp/"
+  github: "hyu2010/sla_assurance_optical"
+  latest: "https://hyu2010.github.io/sla_assurance_optical/draft-yu-ccamp-sla-assurance-optical-yang.html"
 
 author:
  -
