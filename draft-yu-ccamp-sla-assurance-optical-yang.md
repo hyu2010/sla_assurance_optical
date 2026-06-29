@@ -19,24 +19,24 @@
 # Change the file extension to match the format (.xml for XML, etc...)
 #
 ###
-title: "TODO - Your title"
-abbrev: "TODO - Abbreviation"
-category: info
+title: "A YANG Data Model for Service Level Agreement (SLA) Assurance Management in Optical Transport Networks"
+abbrev: "SLA Assurance YANG"
+category: std
 
-docname: draft-todo-yourname-protocol-latest
+docname: draft-yu-ccamp-sla-assurance-optical-yang-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
 consensus: true
 v: 3
-area: AREA
-workgroup: WG Working Group
+area: Routing
+workgroup: CCAMP Working Group
 keyword:
  - next generation
  - unicorn
  - sparkling distributed ledger
 venue:
-  group: WG
+  group: CCAMP Working Group
   type: Working Group
   mail: WG@example.com
   arch: https://example.com/WG
@@ -45,9 +45,9 @@ venue:
 
 author:
  -
-    fullname: Your Name Here
-    organization: Your Organization Here
-    email: your.email@example.com
+    fullname: Henry Yu
+    organization: Huawei
+    email: henry.yu1@huawei.com
 
 normative:
 
