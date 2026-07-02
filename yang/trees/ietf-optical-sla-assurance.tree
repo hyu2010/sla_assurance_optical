@@ -1,0 +1,73 @@
+module: ietf-optical-sla-assurance
+  +--rw sla
+     +--rw issues* [csn]
+        +--rw csn                 uint64
+        +--rw issue-id?           int64
+        +--rw issue-name?         string
+        +--rw issue-sla-type?     enumeration
+        +--rw layer?              enumeration
+        +--rw issue-category?     enumeration
+        +--rw occur-time?         yang:date-and-time
+        +--rw clear-time?         yang:date-and-time
+        +--rw description?        string
+        +--rw suggestion?         string
+        +--rw severity?           enumeration
+        +--rw related-issues* [csn]
+        |  +--rw csn    uint64
+        +--rw source-objects* [object-id]
+        |  +--rw object-name?   string
+        |  +--rw object-id      yang:uuid
+        |  +--rw object-type?   string
+        +--rw issue-type?         enumeration
+        +--rw impacted-objects* [service-name tunnel-name]
+           +--rw service-name    yang:uuid
+           +--rw tunnel-name     yang:uuid
+
+  rpcs:
+    +---x query-history-issue-statistics-by-service
+       +---w input
+       |  +---w service-name?   yang:uuid
+       |  +---w tunnel-name?    yang:uuid
+       |  +---w begin-time?     date-and-time-s
+       |  +---w end-time?       date-and-time-s
+       |  +---w sftp-url?       string
+       +--ro output
+          +--ro sla-issue-statistic* [service-name tunnel-name]
+             +--ro service-name    yang:uuid
+             +--ro tunnel-name     yang:uuid
+             +--ro service-pm
+                +--ro interruptions?        uint64
+                +--ro interrupt-duration?   uint64
+                +--ro availability?         decimal64
+                +--ro interrupt-history*
+                        [interrupt-begin-time interrupt-end-time]
+                   +--ro interrupt-begin-time    yang:date-and-time
+                   +--ro interrupt-end-time      yang:date-and-time
+                   +--ro interrupt-duration?     uint64
+
+  grouping issue-base:
+    +-- issue-id?         int64
+    +-- issue-name?       string
+    +-- issue-sla-type?   enumeration
+    +-- layer?            enumeration
+  grouping issue:
+    +-- csn               uint64
+    +-- issue-id?         int64
+    +-- issue-name?       string
+    +-- issue-sla-type?   enumeration
+    +-- layer?            enumeration
+    +-- issue-category?   enumeration
+    +-- occur-time?       yang:date-and-time
+    +-- clear-time?       yang:date-and-time
+    +-- description?      string
+    +-- suggestion?       string
+    +-- severity?         enumeration
+    +-- related-issues* [csn]
+    |  +-- csn    uint64
+    +-- source-objects* [object-id]
+       +-- object-name?   string
+       +-- object-id      yang:uuid
+       +-- object-type?   string
+  grouping service-info:
+    +-- service-name?   yang:uuid
+    +-- tunnel-name?    yang:uuid
