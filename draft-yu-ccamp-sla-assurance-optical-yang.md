@@ -335,26 +335,24 @@ Possible cause at the fiber layer: The service experiences a detour factor viola
 # SLA Assurance Issue Management Architecture and SLA Assurance Capability
 
 ~~~~ ascii-art
-                        +-------------------+
-                        |  SLA Policies     |
-                        +-------------------+
-                                 |
-                                 v
-   +----------+     +--------------------------+     +----------+
-   |   OSS    |<--->|   Issue Server           |<--->|  Network |
-   +----------+     |  (per domain)            |     +----------+
-                    +--------------------------+
-                    | Issue Identification &     |
-                    | Classification             |
-                    | Issue Reporting           |
-                    | Issue Querying           |
-                    | Issue Resolution          |
-                    +--------------------------+
-                                 |
-                                 v
-                    +--------------------------+
-                    |  Monitoring & Detection   |
-                    +--------------------------+
++-------------------------------------------------------------+
+|                             OSS                             |
++-------------------------------------------------------------+
+       ^                                             |
+       | issue report                                | issue query
+       |                                             v
++-------------------------------------------------------------+
+|                         Issue Server                        |
++-------------------------------------------------------------+
+       ^                ^                ^                ^
+       |                |                |                |
+    alarm/     Network performance  Network Diagnosis    Log
+    event       Metrics/Telemetry    using OAM Test,
+                                           OTDR
+       |                |                |                |
++-------------------------------------------------------------+
+|                      Transport Network                      |
++-------------------------------------------------------------+
 ~~~~
 {:#fig-arch title="SLA Assurance Issue Management Architecture"}
 
@@ -377,26 +375,27 @@ Specifically, the optical layer includes OTS, OMS, and OCh, while the electrical
 ## Interworking with SAIN
 
 ~~~~ ascii-art
-      +-------------------------------------+
-      |     Symptomatic Issues            |
-      |  (observable service degradation)    |
-      +-------------------------------------+
-                     |
-                     | SAIN
-                     v
-      +-------------------------------------+     +-------------------------+
-      |     SAIN Framework               |<--->|  Issue Server        |
-      |  - Symptom Detection            |     |  - Issue Detection    |
-      |  - Symptom Analysis            |     |  - Issue Classification|
-      |  - Root Cause Identification     |     |  - Issue Resolution   |
-      +-------------------------------------+     +-------------------------+
-                     ^
-                     |
-      +-------------------------------------+
-      |  Asymptomatic Issues             |
-      |  (risk conditions, no visible      |
-      |   service symptoms)                |
-      +-------------------------------------+
+    +-------------------------+
+    | Assurance Issue Handler |
+    +-------------------------+
+                 ^
+                 | issue
+                 |
+    +-------------------------+
+    | Assurance Issue Process |
+    +-------------------------+
+      ^                     ^
+      |                     | symptoms
+      | Asymptomatic        |
+      | network      +------+--+
+      | metrics      |  SAIN   |
+      |              +------+--+
+      |                     ^
+      |                     | Service
+      |                     | metrics
+    +-+---------------------+--+
+    |    Network in the        |
+    |   Autonomous Domain      |
 ~~~~
 {:#fig-sain title="Interworking with SAIN"}
 
