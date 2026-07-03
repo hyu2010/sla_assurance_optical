@@ -27,8 +27,8 @@ module ietf-optical-sla-assurance  {
   grouping issue-base {
     leaf issue-id {
       type int64 {
-	      range "0..1000000000";
-	  }
+        range "0..1000000000";
+    }
       description
         "issue id";
     }
@@ -42,45 +42,45 @@ module ietf-optical-sla-assurance  {
     leaf issue-sla-type {
       type enumeration {
         enum bandwidth {
-		  value 1;
-		  description
+      value 1;
+      description
             "bandwidth";
         }
         enum availability {
-		  value 2;
-		  description
+      value 2;
+      description
             "availability";
         }
         enum delay {
-		  value 3;
-		  description
+      value 3;
+      description
             "delay";
         }
       }
       description
         "issue type";
     }
-	
+  
     leaf layer {
-	  type enumeration {
+    type enumeration {
         enum service-layer {
-		  value 1;
-		  description
+      value 1;
+      description
             "service-layer";
         }
         enum electrical-layer {
-		  value 2;
-		  description
+      value 2;
+      description
             "electrical-layer";
         }
         enum optical-layer {
-		  value 3;
-		  description
+      value 3;
+      description
             "optical-layer";
         }
         enum fiber-layer {
-		  value 4;
-		  description
+      value 4;
+      description
             "fiber-layer";
         }
       }
@@ -105,13 +105,13 @@ module ietf-optical-sla-assurance  {
     leaf issue-category {
       type enumeration {
         enum fault {
-		  value 1;
-		  description
+      value 1;
+      description
             "fault";
         }
         enum risk {
-		  value 2;
-		  description
+      value 2;
+      description
             "risk";
         }
       }
@@ -124,7 +124,7 @@ module ietf-optical-sla-assurance  {
       description
         "occur time of the issue";
     }
-	
+  
     leaf clear-time {
       type yang:date-and-time;
       description
@@ -149,23 +149,23 @@ module ietf-optical-sla-assurance  {
     leaf severity {
       type enumeration {
         enum critical {
-		  value 1;
-		  description
+      value 1;
+      description
             "critical";
         }
         enum major {
-		  value 2;
-		  description
+      value 2;
+      description
             "major";
         }
         enum minor {
-		  value 3;
-		  description
+      value 3;
+      description
             "minor";
         }
         enum info {
-		  value 4;
-		  description
+      value 4;
+      description
             "info";
         }
       }
@@ -174,7 +174,7 @@ module ietf-optical-sla-assurance  {
     }
 
     list related-issues {
-	  key "csn";
+    key "csn";
       leaf csn {
         type uint64 {
           range "0..9223372036854775807";
@@ -240,12 +240,12 @@ module ietf-optical-sla-assurance  {
         leaf issue-type {
           type enumeration {
             enum current {
-		      value 1;
+          value 1;
               description
                 "current issue";
             }
             enum history {
-		      value 2;
+          value 2;
               description
                 "history issue";
             }
@@ -273,7 +273,7 @@ module ietf-optical-sla-assurance  {
   }
 
   rpc query-history-issue-statistics-by-service {
-	description
+  description
       "issue RPC inteface";
     input {
       uses service-info;
@@ -300,7 +300,7 @@ module ietf-optical-sla-assurance  {
       list sla-issue-statistic {
         key "service-name tunnel-name";
         uses service-info;
-		
+    
         container service-pm {
           leaf interruptions {
             type uint64 {
@@ -310,7 +310,7 @@ module ietf-optical-sla-assurance  {
               "interruptions";
           }
           leaf interrupt-duration {
-			type uint64 {
+      type uint64 {
               range "0..9223372036854775807";
             }
             description
