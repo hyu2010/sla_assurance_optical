@@ -1671,26 +1671,24 @@ Based on the correlation between cloud-side demand signals and network-side reso
 <figure id="figure-1">
         <div class="alignLeft art-ascii-art art-text artwork" id="section-5-1.1">
 <pre>
-                        +-------------------+
-                        |  SLA Policies     |
-                        +-------------------+
-                                 |
-                                 v
-   +----------+     +--------------------------+     +----------+
-   |   OSS    |&lt;---&gt;|   Issue Server           |&lt;---&gt;|  Network |
-   +----------+     |  (per domain)            |     +----------+
-                    +--------------------------+
-                    | Issue Identification &amp;     |
-                    | Classification             |
-                    | Issue Reporting           |
-                    | Issue Querying           |
-                    | Issue Resolution          |
-                    +--------------------------+
-                                 |
-                                 v
-                    +--------------------------+
-                    |  Monitoring &amp; Detection   |
-                    +--------------------------+
++-------------------------------------------------------------+
+|                             OSS                             |
++-------------------------------------------------------------+
+       ^                                             |
+       | issue report                                | issue query
+       |                                             v
++-------------------------------------------------------------+
+|                         Issue Server                        |
++-------------------------------------------------------------+
+       ^                ^                ^                ^
+       |                |                |                |
+    alarm/     Network performance  Network Diagnosis    Log
+    event       Metrics/Telemetry    using OAM Test,
+                                           OTDR
+       |                |                |                |
++-------------------------------------------------------------+
+|                      Transport Network                      |
++-------------------------------------------------------------+
 </pre>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
@@ -1724,26 +1722,27 @@ Based on the correlation between cloud-side demand signals and network-side reso
 <figure id="figure-2">
           <div class="alignLeft art-ascii-art art-text artwork" id="section-5.1-1.1">
 <pre>
-      +-------------------------------------+
-      |     Symptomatic Issues            |
-      |  (observable service degradation)    |
-      +-------------------------------------+
-                     |
-                     | SAIN
-                     v
-      +-------------------------------------+     +-------------------------+
-      |     SAIN Framework               |&lt;---&gt;|  Issue Server        |
-      |  - Symptom Detection            |     |  - Issue Detection    |
-      |  - Symptom Analysis            |     |  - Issue Classification|
-      |  - Root Cause Identification     |     |  - Issue Resolution   |
-      +-------------------------------------+     +-------------------------+
-                     ^
-                     |
-      +-------------------------------------+
-      |  Asymptomatic Issues             |
-      |  (risk conditions, no visible      |
-      |   service symptoms)                |
-      +-------------------------------------+
+    +-------------------------+
+    | Assurance Issue Handler |
+    +-------------------------+
+                 ^
+                 | issue
+                 |
+    +-------------------------+
+    | Assurance Issue Process |
+    +-------------------------+
+      ^                     ^
+      |                     | symptoms
+      | Asymptomatic        |
+      | network      +------+--+
+      | metrics      |  SAIN   |
+      |              +------+--+
+      |                     ^
+      |                     | Service
+      |                     | metrics
+    +-+---------------------+--+
+    |    Network in the        |
+    |   Autonomous Domain      |
 </pre>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
