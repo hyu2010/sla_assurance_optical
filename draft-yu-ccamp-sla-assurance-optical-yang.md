@@ -29,11 +29,11 @@ author:
 -
     fullname: Henry Yu
     organization: Huawei
-    email: henry.yu1@huawei.com
+    email: hyu2010b@gmail.com
 -
     fullname: Xiao Li
     organization: Huawei
-    email: henry.yu1@huawei.com
+    email: lixiao33@huawei.com
 -
     fullname: Yanxia Tan
     organization: China Unicom
