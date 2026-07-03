@@ -857,26 +857,24 @@ Table of Contents
 5.  SLA Assurance Issue Management Architecture and SLA Assurance
     Capability
 
-                           +-------------------+
-                           |  SLA Policies     |
-                           +-------------------+
-                                    |
-                                    v
-      +----------+     +--------------------------+     +----------+
-      |   OSS    |<--->|   Issue Server           |<--->|  Network |
-      +----------+     |  (per domain)            |     +----------+
-                       +--------------------------+
-                       | Issue Identification &     |
-                       | Classification             |
-                       | Issue Reporting           |
-                       | Issue Querying           |
-                       | Issue Resolution          |
-                       +--------------------------+
-                                    |
-                                    v
-                       +--------------------------+
-                       |  Monitoring & Detection   |
-                       +--------------------------+
+   +-------------------------------------------------------------+
+   |                             OSS                             |
+   +-------------------------------------------------------------+
+          ^                                             |
+          | issue report                                | issue query
+          |                                             v
+   +-------------------------------------------------------------+
+   |                         Issue Server                        |
+   +-------------------------------------------------------------+
+          ^                ^                ^                ^
+          |                |                |                |
+       alarm/     Network performance  Network Diagnosis    Log
+       event       Metrics/Telemetry    using OAM Test,
+                                              OTDR
+          |                |                |                |
+   +-------------------------------------------------------------+
+   |                      Transport Network                      |
+   +-------------------------------------------------------------+
 
            Figure 1: SLA Assurance Issue Management Architecture
 
@@ -930,28 +928,29 @@ Table of Contents
 
 5.1.  Interworking with SAIN
 
-      +-------------------------------------+
-      |     Symptomatic Issues            |
-      |  (observable service degradation)    |
-      +-------------------------------------+
-                     |
-                     | SAIN
-                     v
-      +-------------------------------------+     +-------------------------+
-      |     SAIN Framework               |<--->|  Issue Server        |
-      |  - Symptom Detection            |     |  - Issue Detection    |
-      |  - Symptom Analysis            |     |  - Issue Classification|
-      |  - Root Cause Identification     |     |  - Issue Resolution   |
-      +-------------------------------------+     +-------------------------+
-                     ^
-                     |
-      +-------------------------------------+
-      |  Asymptomatic Issues             |
-      |  (risk conditions, no visible      |
-      |   service symptoms)                |
-      +-------------------------------------+
+       +-------------------------+
+       | Assurance Issue Handler |
+       +-------------------------+
+                    ^
+                    | issue
+                    |
+       +-------------------------+
+       | Assurance Issue Process |
+       +-------------------------+
+         ^                     ^
+         |                     | symptoms
+         | Asymptomatic        |
+         | network      +------+--+
+         | metrics      |  SAIN   |
+         |              +------+--+
+         |                     ^
+         |                     | Service
+         |                     | metrics
+       +-+---------------------+--+
+       |    Network in the        |
+       |   Autonomous Domain      |
 
-                   Figure 2: Interworking with SAIN
+                      Figure 2: Interworking with SAIN
 
    SAIN [RFC9417] defines an architecture for network service assurance
    and specifies mechanisms for detecting symptoms associated with
