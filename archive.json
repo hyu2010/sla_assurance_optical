@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-02T04:10:49.414558+00:00",
+  "timestamp": "2026-07-05T04:09:55.140875+00:00",
   "repo": "hyu2010/sla_assurance_optical",
   "labels": [
     {
@@ -50,5 +50,118 @@
     }
   ],
   "issues": [],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOTI2JHs7trm2R",
+      "title": "Firstdraft",
+      "url": "https://github.com/hyu2010/sla_assurance_optical/pull/1",
+      "state": "MERGED",
+      "author": "hyu2010",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-07-03T17:42:07Z",
+      "updatedAt": "2026-07-03T17:43:22Z",
+      "baseRepository": "hyu2010/sla_assurance_optical",
+      "baseRefName": "main",
+      "baseRefOid": "80f4ad5bc4ec1d6b1bc190bd41b5eb416e16801a",
+      "headRepository": "hyu2010/sla_assurance_optical",
+      "headRefName": "firstdraft",
+      "headRefOid": "4a07b4446c3c87bcd4ce5b880835076e161dbd3a",
+      "closedAt": "2026-07-03T17:43:22Z",
+      "mergedAt": "2026-07-03T17:43:22Z",
+      "mergedBy": "hyu2010",
+      "mergeCommit": {
+        "oid": "49212fe99211750e4a61739778e98ea4171bf9c9"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 2,
+      "id": "PR_kwDOTI2JHs7tthTd",
+      "title": "updated md file",
+      "url": "https://github.com/hyu2010/sla_assurance_optical/pull/2",
+      "state": "MERGED",
+      "author": "hyu2010",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-07-03T19:47:49Z",
+      "updatedAt": "2026-07-03T19:48:27Z",
+      "baseRepository": "hyu2010/sla_assurance_optical",
+      "baseRefName": "main",
+      "baseRefOid": "49212fe99211750e4a61739778e98ea4171bf9c9",
+      "headRepository": "hyu2010/sla_assurance_optical",
+      "headRefName": "firstdraft",
+      "headRefOid": "afaa1ac51802d01c49a0caad0d01e20813af1dee",
+      "closedAt": "2026-07-03T19:48:27Z",
+      "mergedAt": "2026-07-03T19:48:27Z",
+      "mergedBy": "hyu2010",
+      "mergeCommit": {
+        "oid": "457dd90e284404e5cbe51bb11ea0cb80b496371f"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3,
+      "id": "PR_kwDOTI2JHs7tuGAA",
+      "title": "first draft ready",
+      "url": "https://github.com/hyu2010/sla_assurance_optical/pull/3",
+      "state": "MERGED",
+      "author": "hyu2010",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-07-03T20:28:09Z",
+      "updatedAt": "2026-07-03T20:29:57Z",
+      "baseRepository": "hyu2010/sla_assurance_optical",
+      "baseRefName": "main",
+      "baseRefOid": "457dd90e284404e5cbe51bb11ea0cb80b496371f",
+      "headRepository": "hyu2010/sla_assurance_optical",
+      "headRefName": "firstdraft",
+      "headRefOid": "207a565a8eeea2ebd6a0f2d2ff48db87bc2f271c",
+      "closedAt": "2026-07-03T20:29:57Z",
+      "mergedAt": "2026-07-03T20:29:57Z",
+      "mergedBy": "hyu2010",
+      "mergeCommit": {
+        "oid": "a00b25374c244b692e41807e6bc16366b5f6870b"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 4,
+      "id": "PR_kwDOTI2JHs7tuZye",
+      "title": "fix email address",
+      "url": "https://github.com/hyu2010/sla_assurance_optical/pull/4",
+      "state": "MERGED",
+      "author": "hyu2010",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-07-03T20:51:51Z",
+      "updatedAt": "2026-07-03T20:52:27Z",
+      "baseRepository": "hyu2010/sla_assurance_optical",
+      "baseRefName": "main",
+      "baseRefOid": "a00b25374c244b692e41807e6bc16366b5f6870b",
+      "headRepository": "hyu2010/sla_assurance_optical",
+      "headRefName": "firstdraft",
+      "headRefOid": "e13cc4eda841c443051d71411023c9c5847aadc7",
+      "closedAt": "2026-07-03T20:52:27Z",
+      "mergedAt": "2026-07-03T20:52:27Z",
+      "mergedBy": "hyu2010",
+      "mergeCommit": {
+        "oid": "332fe6efc5d5d38ed805608b86c4c5821b7ea4c0"
+      },
+      "comments": [],
+      "reviews": []
+    }
+  ]
 }
