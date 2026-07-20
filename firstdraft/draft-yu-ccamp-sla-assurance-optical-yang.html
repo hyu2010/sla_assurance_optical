@@ -33,7 +33,7 @@ maintain high service reliability and SLA compliance
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.10.0
+    platformdirs 4.10.1
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
@@ -1060,7 +1060,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Yu, et al.</td>
-<td class="center">Expires 4 January 2027</td>
+<td class="center">Expires 21 January 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1073,12 +1073,12 @@ svg {
 <dd class="internet-draft">draft-yu-ccamp-sla-assurance-optical-yang-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-07-03" class="published">3 July 2026</time>
+<time datetime="2026-07-20" class="published">20 July 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-01-04">4 January 2027</time></dd>
+<dd class="expires"><time datetime="2027-01-21">21 January 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1147,7 +1147,7 @@ maintain high service reliability and SLA compliance<a href="#section-abstract-1
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 4 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 21 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1323,10 +1323,12 @@ maintain high service reliability and SLA compliance<a href="#section-abstract-1
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">Service Level Agreement (SLA) assurance management in optical transport networks concerns the continuous monitoring, analysis, and management of network conditions that may impact the performance, availability, and reliability of services. Its objective is to detect potential issues proactively, diagnose their root causes, and initiate corrective actions to prevent SLA violations. Several standards already exist in this area. SAIN <span>[<a href="#RFC9417" class="cite xref">RFC9417</a>]</span> and <span>[<a href="#RFC9418" class="cite xref">RFC9418</a>]</span> defines an architecture and a YANG model for network service assurance, respectively. {{!I-D.ietf-nmop-network-incident-yang] defines a YANG model for the network incident lifecycle management. It aims to provide a standard way to report, diagnose, and help resolve network incidents which may cause SLA violations.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-1">Service Level Agreement (SLA) assurance management in optical transport networks concerns the continuous monitoring, analysis, and management of network conditions that may impact the performance, availability, and reliability of services. Its objective is to detect potential issues proactively, diagnose their root causes, and initiate corrective actions to prevent SLA violations. Several standards already exist in this area. SAIN <span>[<a href="#RFC9417" class="cite xref">RFC9417</a>]</span> and <span>[<a href="#RFC9418" class="cite xref">RFC9418</a>]</span> defines an architecture and a YANG model for network service assurance, respectively. <span>[<a href="#I-D.ietf-nmop-network-incident-yang" class="cite xref">I-D.ietf-nmop-network-incident-yang</a>]</span> defines a YANG model for the network incident lifecycle management. It aims to provide a standard way to report, diagnose, and help resolve network incidents which may cause SLA violations.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">However, several gaps remain in the existing standards and their associated YANG models with respect to supporting SLA assurance management in optical transport networks. First, the SAIN framework focuses on the detection and resolution of symptoms, that is, conditions indicating that a service instance or subservice is not operating in a fully healthy state. In optical transport networks, however, undesirable network conditions may exist that increase the risk of SLA violations while remaining asymptomatic. For example, multiple service paths may traverse fiber links deployed within the same trench, thereby introducing a common point of failure. Such conditions do not necessarily result in observable service degradation and, therefore, may not be identified through symptom-based monitoring mechanisms.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">Service Level Agreement (SLA) assurance management in optical transport networks concerns the continuous monitoring, analysis, and management of network conditions that may impact the performance, availability, and reliability of services. Its objective is to detect potential issues proactively, diagnose their root causes, and initiate corrective actions to prevent SLA violations. Several standards already exist in this area. SAIN <span>[<a href="#RFC9417" class="cite xref">RFC9417</a>]</span> and <span>[<a href="#RFC9418" class="cite xref">RFC9418</a>]</span> defines an architecture and a YANG model for network service assurance, respectively. <span>[<a href="#I-D.ietf-nmop-network-incident-yang" class="cite xref">I-D.ietf-nmop-network-incident-yang</a>]</span> defines a YANG model for the network incident lifecycle management. It aims to provide a standard way to report, diagnose, and help resolve network incidents which may cause SLA violations.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">However, several gaps remain in the existing standards and their associated YANG models with respect to supporting SLA assurance management in optical transport networks. First, the SAIN framework focuses on the detection and resolution of symptoms, that is, conditions indicating that a service instance or subservice is not operating in a fully healthy state. In optical transport networks, however, undesirable network conditions may exist that increase the risk of SLA violations while remaining asymptomatic. For example, multiple service paths may traverse fiber links deployed within the same trench, thereby introducing a common point of failure. Such conditions do not necessarily result in observable service degradation and, therefore, may not be identified through symptom-based monitoring mechanisms.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-3">In addition, SLA assurance monitoring, in some cases, needs to detect and report events defined by SLA policies, such as bandwidth utilization exceeding a specified threshold. The threshold values are defined by the user, reflecting user’s perception of desired network conditions. The occurrence of such events does not necessarily indicate the presence of an incident affecting service health. Instead, event reporting may serve as a precautionary mechanism requested by the user. A mechanism and a YANG model are therefore needed to support the detection and reporting of such events.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">Thirdly, some optical network conditions, such as fiber attenuation, may degrade silently and gradually before resulting in observable incidents. These conditions may persist for an extended period of time. For SLA assurance management in optical networks, it is preferable to define, detect, and resolve such issues proactively rather than waiting for them to escalate into incidents.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5">To address these optical network specific challenges, an issue-centric SLA assurance solution is specified. An issue is an optical network condition that, if unaddressed, may lead to SLA violations and incidents.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-6">This document defines a YANG data model for SLA assurance management in optical networks. The model defines optical network SLA assurance issues and their corresponding resolutions.<a href="#section-1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1423,10 +1425,10 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
         <h3 id="name-deterministic-latency-assur">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-deterministic-latency-assur" class="section-name selfRef">Deterministic Latency Assurance for Latency-Sensitive Services</a>
         </h3>
-<p id="section-3.2-1">Deterministic SLA assurance in optical transport networks is a use case that aims to ensure stable and predictable service performance for latency-sensitive applications, such as AI distributed training, telemedicine, industrial automation, and immersive XR services. These applications require stringent guarantees on end-to-end latency, jitter, packet loss, bandwidth availability, and service continuity.
-In this use case, an optical transport service is provisioned with explicit SLA objectives that define the required deterministic performance characteristics. During service operation, the network continuously monitors both the service state and the underlying optical transport infrastructure through real-time telemetry collection. The monitored information may include end-to-end path latency, optical link quality, bandwidth utilization, wavelength continuity, congestion conditions, and other transport performance indicators relevant to SLA fulfillment.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2-2">As network conditions dynamically evolve, the system identifies conditions that may threaten the SLA commitments of active services before visible service degradation occurs. Such conditions may include increasing congestion, abnormal latency variation, optical signal degradation, or predicted failures affecting the active transport path. The network then evaluates alternative optical transport paths and service optimization options capable of preserving the required SLA characteristics.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.2-3">The objective of this use case is to maintain continuous SLA compliance throughout the service lifecycle by enabling adaptive transport behavior in response to changing network conditions. This improves service reliability, minimizes performance instability and disruption, and enhances the capability of optical transport networks to support mission-critical and performance-sensitive applications.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2-1">Deterministic SLA assurance in optical transport networks is a use case that aims to ensure stable and predictable service performance for latency-sensitive applications, such as AI distributed training, telemedicine, industrial automation, and immersive XR services. These applications require stringent guarantees on end-to-end latency, jitter, packet loss, bandwidth availability, and service continuity.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-2">In this use case, an optical transport service is provisioned with explicit SLA objectives that define the required deterministic performance characteristics. During service operation, the network continuously monitors both the service state and the underlying optical transport infrastructure through real-time telemetry collection. The monitored information may include end-to-end path latency, optical link quality, bandwidth utilization, wavelength continuity, congestion conditions, and other transport performance indicators relevant to SLA fulfillment.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2-3">As network conditions dynamically evolve, the system identifies conditions that may threaten the SLA commitments of active services before visible service degradation occurs. Such conditions may include increasing congestion, abnormal latency variation, optical signal degradation, or predicted failures affecting the active transport path. The network then evaluates alternative optical transport paths and service optimization options capable of preserving the required SLA characteristics.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2-4">The objective of this use case is to maintain continuous SLA compliance throughout the service lifecycle by enabling adaptive transport behavior in response to changing network conditions. This improves service reliability, minimizes performance instability and disruption, and enhances the capability of optical transport networks to support mission-critical and performance-sensitive applications.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="dynamic-bandwidth-allocation-for-cloud-network-synergy">
@@ -1435,9 +1437,9 @@ In this use case, an optical transport service is provisioned with explicit SLA 
 <a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-dynamic-bandwidth-allocatio" class="section-name selfRef">Dynamic Bandwidth Allocation for Cloud-Network Synergy</a>
         </h3>
 <p id="section-3.3-1">Cloud–Network Synergy-Based Dynamic Bandwidth Allocation is a use case in optical transport networks that enables adaptive allocation of transport resources based on coordinated demands from cloud applications and network conditions. It targets service scenarios such as AI training workloads, distributed computing, cloud bursting, and large-scale data synchronization, where bandwidth demand is highly dynamic and time-varying.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
-<p id="section-3.3-2">In this use case, cloud applications continuously generate workload signals that reflect their resource requirements, including bandwidth demand, traffic intensity, latency sensitivity, and service priority. These requirements are communicated to the optical transport network through a cloud–network interface. At the same time, the optical transport network maintains real-time visibility of available capacity, including wavelength availability, link utilization, path constraints, and operational state across the optical infrastructure.
-Based on the correlation between cloud-side demand signals and network-side resource state, the system determines when and where bandwidth adjustments are required. When increased demand is detected, the network evaluates feasible optical path and wavelength allocation options that satisfy service constraints. Conversely, when demand decreases, allocated resources may be released or re-optimized to improve overall network efficiency.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
-<p id="section-3.3-3">The objective of this use case is to achieve efficient and elastic utilization of optical transport resources while ensuring that cloud application performance requirements are consistently met. By enabling coordinated decision-making between cloud workloads and optical network control, the system improves resource utilization, reduces congestion by dynamic bandwidth control of hard-pipes, and enhances the responsiveness of the transport network to dynamic application demands.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-2">In this use case, cloud applications continuously generate workload signals that reflect their resource requirements, including bandwidth demand, traffic intensity, latency sensitivity, and service priority. These requirements are communicated to the optical transport network through a cloud–network interface. At the same time, the optical transport network maintains real-time visibility of available capacity, including wavelength availability, link utilization, path constraints, and operational state across the optical infrastructure.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.3-3">Based on the correlation between cloud-side demand signals and network-side resource state, the system determines when and where bandwidth adjustments are required. When increased demand is detected, the network evaluates feasible optical path and wavelength allocation options that satisfy service constraints. Conversely, when demand decreases, allocated resources may be released or re-optimized to improve overall network efficiency.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-4">The objective of this use case is to achieve efficient and elastic utilization of optical transport resources while ensuring that cloud application performance requirements are consistently met. By enabling coordinated decision-making between cloud workloads and optical network control, the system improves resource utilization, reduces congestion by dynamic bandwidth control of hard-pipes, and enhances the responsiveness of the transport network to dynamic application demands.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1743,6 +1745,7 @@ Based on the correlation between cloud-side demand signals and network-side reso
     +-+---------------------+--+
     |    Network in the        |
     |   Autonomous Domain      |
+    +--------------------------+
 </pre>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
@@ -2258,10 +2261,10 @@ module ietf-optical-sla-assurance  {
         <h3 id="name-the-ietf-xml-registry">
 <a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-the-ietf-xml-registry" class="section-name selfRef">The "IETF XML" Registry</a>
         </h3>
-<p id="section-9.1-1">IANA is requested to register the following URI in the "ns" registry within the "IETF XML Registry" group <span>[<a href="#RFC3688" class="cite xref">RFC3688</a>]</span>:
-URI: urn:ietf:params:xml:ns:yang:hnts
-Registrant Contact: The IESG.
-XML: N/A, the requested URIs are XML namespaces.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
+<p id="section-9.1-1">IANA is requested to register the following URI in the "ns" registry within the "IETF XML Registry" group <span>[<a href="#RFC3688" class="cite xref">RFC3688</a>]</span>:<a href="#section-9.1-1" class="pilcrow">¶</a></p>
+<p id="section-9.1-2">URI: urn:ietf:params:xml:ns:yang:hnts<a href="#section-9.1-2" class="pilcrow">¶</a></p>
+<p id="section-9.1-3">Registrant Contact: The IESG.<a href="#section-9.1-3" class="pilcrow">¶</a></p>
+<p id="section-9.1-4">XML: N/A, the requested URIs are XML namespaces.<a href="#section-9.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="the-yang-module-names-registry">
@@ -2269,13 +2272,13 @@ XML: N/A, the requested URIs are XML namespaces.<a href="#section-9.1-1" class="
         <h3 id="name-the-yang-module-names-regis">
 <a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-the-yang-module-names-regis" class="section-name selfRef">The "YANG Module Names" Registry</a>
         </h3>
-<p id="section-9.2-1">IANA is requested to register the following YANG module in the "YANG Module Names" registry <span>[<a href="#RFC6020" class="cite xref">RFC6020</a>]</span> within the "YANG Parameters" registry group.
-Name: ietf-optical-sla-assurance
-Maintained by IANA?  N
-Namespace: urn:ietf:params:xml:ns:yang:ietf-optical-sla-assurance
-Prefix: ietf-optical-sla-assurance
-Reference:  RFC XXXX
-// RFC Ed.: replace XXXX and remove this comment<a href="#section-9.2-1" class="pilcrow">¶</a></p>
+<p id="section-9.2-1">IANA is requested to register the following YANG module in the "YANG Module Names" registry <span>[<a href="#RFC6020" class="cite xref">RFC6020</a>]</span> within the "YANG Parameters" registry group.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
+<p id="section-9.2-2">Name: ietf-optical-sla-assurance<a href="#section-9.2-2" class="pilcrow">¶</a></p>
+<p id="section-9.2-3">Maintained by IANA?  N<a href="#section-9.2-3" class="pilcrow">¶</a></p>
+<p id="section-9.2-4">Namespace: urn:ietf:params:xml:ns:yang:ietf-optical-sla-assurance<a href="#section-9.2-4" class="pilcrow">¶</a></p>
+<p id="section-9.2-5">Prefix: ietf-optical-sla-assurance<a href="#section-9.2-5" class="pilcrow">¶</a></p>
+<p id="section-9.2-6">Reference:  RFC XXXX<a href="#section-9.2-6" class="pilcrow">¶</a></p>
+<p id="section-9.2-7">// RFC Ed.: replace XXXX and remove this comment<a href="#section-9.2-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2293,7 +2296,7 @@ Reference:  RFC XXXX
 <dl class="references">
 <dt id="I-D.ietf-nmop-network-incident-yang">[I-D.ietf-nmop-network-incident-yang]</dt>
         <dd>
-<span class="refAuthor">Hu, T.</span>, <span class="refAuthor">Contreras, L. M.</span>, <span class="refAuthor">Wu, Q.</span>, <span class="refAuthor">Davis, N.</span>, and <span class="refAuthor">C. Feng</span>, <span class="refTitle">"A YANG Data Model for Network Incident Management"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-nmop-network-incident-yang-09</span>, <time datetime="2026-06-28" class="refDate">28 June 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-nmop-network-incident-yang-09">https://datatracker.ietf.org/doc/html/draft-ietf-nmop-network-incident-yang-09</a>&gt;</span>. </dd>
+<span class="refAuthor">Hu, T.</span>, <span class="refAuthor">Contreras, L. M.</span>, <span class="refAuthor">Wu, Q.</span>, <span class="refAuthor">Davis, N.</span>, and <span class="refAuthor">C. Feng</span>, <span class="refTitle">"A YANG Data Model for Network Incident Management"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-nmop-network-incident-yang-10</span>, <time datetime="2026-07-05" class="refDate">5 July 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-nmop-network-incident-yang-10">https://datatracker.ietf.org/doc/html/draft-ietf-nmop-network-incident-yang-10</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-nmop-terminology">[I-D.ietf-nmop-terminology]</dt>
         <dd>
