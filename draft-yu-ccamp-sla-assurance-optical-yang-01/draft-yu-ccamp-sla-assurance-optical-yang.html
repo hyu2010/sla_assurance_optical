@@ -1,0 +1,2439 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>A YANG Data Model for Service Level Agreement (SLA) Assurance Management in Optical Transport Networks</title>
+<meta content="Henry Yu" name="author">
+<meta content="Xiao Li" name="author">
+<meta content="Yanxia Tan" name="author">
+<meta content="Xing Zhao" name="author">
+<meta content="
+       This document defines a YANG module for SLA assurance management in
+optical transport networks. The module provides a standard way to
+define, detect, and report issues that may impact service and network
+availability. It enables consistent modeling of assurance intent,
+impairment detection, and risk reporting across optical transport
+domains. The YANG model is designed to support closed-loop operations,
+allowing automated monitoring, analysis, and remediation workflows to
+maintain high service reliability and SLA compliance 
+    " name="description">
+<meta content="xml2rfc 3.34.0" name="generator">
+<meta content="next generation" name="keyword">
+<meta content="unicorn" name="keyword">
+<meta content="sparkling distributed ledger" name="keyword">
+<meta content="draft-yu-ccamp-sla-assurance-optical-yang-latest" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.34.0
+    Python 3.14.5
+    ConfigArgParse 1.7.5
+    google-i18n-address 3.1.1
+    intervaltree 3.2.1
+    Jinja2 3.1.6
+    lxml 6.1.1
+    natsort 8.4.0
+    platformdirs 4.10.1
+    pycountry 24.6.1
+    PyYAML 6.0.3
+    requests 2.33.1
+    wcwidth 0.8.2
+-->
+<link href="draft-yu-ccamp-sla-assurance-optical-yang.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+}
+
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  --font-title: "Sofia Sans Semi Condensed", sans-serif;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+section {
+  clear: both;
+}
+.section-number {
+  padding-right: 0.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-title);
+  font-weight: 680;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1 {
+  &#title {
+    font-size: 32px;
+    line-height: 40px;
+    clear: both;
+    margin: 1.5em 0 0.2em;
+  }
+  &#rfcnum {
+    margin: 1.5em 0 0.2em;
+    & + h1#title {
+      margin: 0.2em 0;
+    }
+  }
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+  & code, & samp, & tt {
+    font-size: 16px;
+    line-height: 0;
+  }
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight {
+  margin: 1em 0;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    margin: 0;
+    float: right;
+    clear: both;
+  }
+  & > *:nth-child(2) {
+    clear: both;
+    display: block;
+    border: none;
+  }
+}
+svg {
+  display: block;
+  /* font-family isn't space-separated, but =~ will have to do */
+  &[font-family~="monospace" i], & [font-family~="monospace" i] {
+    font-family: var(--font-mono);
+  }
+}
+.alignCenter {
+  margin: 1em 0;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+       support flexbox yet.
+    */
+    display: table;
+    margin: 0 auto;
+  }
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+  & :is(ol, ul) {
+    margin-left: 1em;
+  }
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+  & li {
+    margin-top: 0.5em;
+  }
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  margin: 0 0 0 2em;
+  & li {
+    margin: 0;
+    & :first-child { margin-top: 0; }
+    & :last-child { margin-bottom: 0; }
+  }
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+  &.olPercent {
+    --indent: 5ch;
+    & > dt {
+      min-width: calc(var(--indent) - 2ch);
+      float: none;
+    }
+  }
+
+  dl > dd > & {
+    margin-top: 0.5em;
+    margin-bottom: 0;
+  }
+
+  &:not(.dlNewline) > dt {
+    float: left;
+    margin-right: 2ch;
+    min-width: 8ch;
+  }
+  & > dd {
+    margin-bottom: .8em;
+    margin-left: var(--indent) !important; /* stupid element overrides */
+    min-height: 2ex;
+  }
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+  & > :is(:first-child, .break:first-child + *) {
+    margin-top: 0;
+  }
+  & > :is(:last-child) {
+    margin-bottom: 0;
+  }
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a {
+  text-decoration: none;
+  &[href] {
+    color: var(--link-color);
+    &:hover { text-decoration: underline; }
+    &.selfRef {
+      color: var(--text-color);
+      &:hover {
+        text-decoration: none;
+        background-color: var(--highlight-color);
+      }
+    }
+  }
+}
+.iref + a[href].internal {
+  color: var(--text-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+  & blockquote {
+    margin: 0.8em 0.4em 0.4em;
+  }
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+  caption-side: bottom;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) {
+    & p {
+      margin: -2px 0;
+      max-height: 0;
+      transition: max-height 2s ease, margin 0.5s ease 0.5s;
+      overflow: hidden;
+    }
+    &:hover p,
+    & h2:target ~ p {
+      margin: 0.5em 0;
+      max-height: 500px;
+      overflow: auto;
+    }
+  }
+  pre, svg {
+    display: inline-block;
+    /* In the horizontal direction, sometimes people make over-sized figures.
+       Scrollbars for those is therefore necessary: auto adds them as necessary..
+       In the vertical direction, the line-height can combine with the font
+       asender/descender height to produce scrollbars: hidden avoids that. */
+    overflow: auto hidden;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+  border-left: 2px var(--pilcrow-strong) solid;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  width: auto;
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+  &.right { margin-left: auto; }
+  &.center { margin-left: auto; margin-right: auto; }
+  &.left { margin-right: auto; }
+  & .text-left { text-align: left; }
+  & .text-center { text-align: center; }
+  & .text-right { text-align: right; }
+  & caption {
+    margin: 0;
+    padding: 3px 0 3px 1em;
+  }
+  & p { margin: 0; }
+}
+
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+  &[href] {
+    color: var(--pilcrow-weak);
+    &:hover { text-decoration: none; }
+  }
+  @media not print {
+    :hover > &, &:focus {
+      opacity: 1;
+    }
+    &[href]:hover {
+      color: var(--pilcrow-strong);
+      background-color: transparent;
+    }
+  }
+  @media print {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+  & dt {
+    width: var(--identifier-width);
+    min-width: var(--identifier-width);
+    clear: left;
+    float: left;
+    text-align: right;
+    margin-right: 1ch;
+  }
+  & dd {
+    margin: 0;
+    margin-left: calc(1em + var(--identifier-width)) !important;
+    min-width: 5em;
+  }
+  & .authors {
+    & .author {
+      display: inline-block;
+      margin-right: 1.5em;
+    }
+    & .org {
+      font-style: italic;
+    }
+  }
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+  & .prepared {
+    float: right;
+  }
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+
+  & nav {
+    & ul {
+      margin: 0 0.5em 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    & li {
+      line-height: 1.3em;
+      margin: 2px 0;
+      padding-left: 1.2em;
+      text-indent: -1.2em;
+    }
+  }
+  & a.xref {
+    white-space: normal;
+  }
+}
+
+.references {
+  & > dt {
+    text-align: right;
+    font-weight: bold;
+    min-width: 10ch;
+    margin-right: 1.5ch;
+    &:target::before {
+      content: "⇒";
+      margin: 0 10px 0 -25px;
+    }
+  }
+  & > dd {
+    margin-left: 12ch !important;
+    overflow: visible;
+    & .refInstance {
+      margin-bottom: 0.8em;
+    }
+    & .ascii {
+      margin-bottom: 0.25em;
+    }
+  }
+}
+
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  max-width: 20em;
+  margin: 1em auto 1em 0;
+
+  & .nameRole {
+    font-weight: 700;
+    margin-left: 0;
+  }
+  & .label {
+    margin: 0.5em 0;
+  }
+  & .type {
+    display: none;
+  }
+  & .alternative-contact {
+    margin: 0.5em 0 0.25em 0;
+  }
+  & .non-ascii {
+    margin: 0 0 0 2em;
+  }
+  & div.left {
+    text-align: left;
+  }
+  & div.right {
+    text-align: right;
+  }
+}
+
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses {
+    & > section {
+      column-count: 2;
+      column-gap: 20px;
+    }
+    & > section > h2 {
+      column-span: all;
+    }
+    /* hack for break-inside: avoid-column */
+    & address {
+      display: inline-block;
+      break-inside: avoid-column;
+    }
+  }
+}
+
+/* Comments */
+.rfcEditorRemove {
+  & p:first-of-type {
+    font-style: italic;
+  }
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+
+@media screen {
+  #toc {
+    & nav {
+      font-family: var(--font-title);
+      font-weight: 360;
+      & > ul { margin-bottom: 2em; }
+      & ul {
+        margin: 0 0 0 4px;
+        & :is(p, li) {
+          margin: 2px 0;
+        }
+      }
+    }
+    & a.toplink {
+      float: right;
+    }
+  }
+}
+@media not screen {
+  #toc a.toplink {
+    display: none;
+  }
+}
+
+
+/* TOC layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 1px 0 0 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+    & h2 {
+      margin: 0;
+      padding: 2px 0 2px 6px;
+      padding-right: 1em;
+      font-size: 18px;
+      line-height: 24px;
+      min-width: 190px;
+      text-align: right;
+      background-color: #444;
+      color: white;
+      cursor: pointer;
+      &::before { /* css hamburger */
+        float: right;
+        position: relative;
+        width: 1em;
+        height: 1px;
+        left: -164px;
+        margin: 8px 0 0 0;
+        background: white none repeat scroll 0 0;
+        box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+        content: "";
+      }
+    }
+    & nav {
+      display: none;
+      background-color: var(--background-color);
+      padding: 0.5em 1em 1em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      height: calc(100vh - 48px);
+      border-left: 1px solid #ddd;
+    }
+    &.active {
+      opacity: 1;
+      & nav { display: block; }
+    }
+    /* Make the collapsed ToC header render white on gray also when it's a link */
+    & h2 a,
+    & h2 a:is(:link, :focus, :hover),
+    & a.toplink,
+    & a.toplink:hover {
+      color: white;
+      background-color: #444;
+      text-decoration: none;
+    }
+    & a.toplink {
+      margin: 2px 0.5em 0;
+    }
+  }
+}
+
+/* TOC layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+    & h2 {
+      margin: 0;
+      padding: 0.25em 1em 1em 0;
+    }
+    & nav {
+      display: block;
+      height: calc(90vh - 84px);
+      bottom: 0;
+      padding: 0.5em 0 2em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
+    & a.toplink {
+      margin: 8px 0.5em 0;
+    }
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc {
+    page-break-before: always;
+    border-top: none;
+    padding-top: 0;
+  }
+  #n-introduction {
+    page-break-before: always;
+  }
+  figure, pre, .vcard {
+    page-break-inside: avoid;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  :is(h2, h3, h4, h5, h6)+*, dd {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg {
+  & :is([stroke="black"], [stroke^="#000"]) {
+    stroke: var(--text-color);
+  }
+  & :is([stroke="white"], [stroke^="#fff"]) {
+    stroke: var(--background-color);
+  }
+  & :is([fill="black"], [fill^="#000"], :not([fill])) {
+    fill: var(--text-color);
+  }
+  & :is([fill="white"], [fill^="#fff"]) {
+    fill: var(--background-color);
+  }
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">SLA Assurance YANG</td>
+<td class="right">July 2026</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Yu, et al.</td>
+<td class="center">Expires 21 January 2027</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">Common Control and Measurement Plane</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-yu-ccamp-sla-assurance-optical-yang-latest</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2026-07-20" class="published">20 July 2026</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Standards Track</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2027-01-21">21 January 2027</time></dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">H. Yu</div>
+<div class="org">Huawei</div>
+</div>
+<div class="author">
+      <div class="author-name">X. Li</div>
+<div class="org">Huawei</div>
+</div>
+<div class="author">
+      <div class="author-name">Y. Tan</div>
+<div class="org">China Unicom</div>
+</div>
+<div class="author">
+      <div class="author-name">X. Zhao</div>
+<div class="org">CAICT</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">A YANG Data Model for Service Level Agreement (SLA) Assurance Management in Optical Transport Networks</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">This document defines a YANG module for SLA assurance management in
+optical transport networks. The module provides a standard way to
+define, detect, and report issues that may impact service and network
+availability. It enables consistent modeling of assurance intent,
+impairment detection, and risk reporting across optical transport
+domains. The YANG model is designed to support closed-loop operations,
+allowing automated monitoring, analysis, and remediation workflows to
+maintain high service reliability and SLA compliance<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-about-this-document">
+<a href="#name-about-this-document" class="section-name selfRef">About This Document</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">
+        The latest revision of this draft can be found at <span><a href="https://hyu2010.github.io/sla_assurance_optical/draft-yu-ccamp-sla-assurance-optical-yang.html">https://hyu2010.github.io/sla_assurance_optical/draft-yu-ccamp-sla-assurance-optical-yang.html</a></span>.
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-yu-ccamp-sla-assurance-optical-yang/">https://datatracker.ietf.org/doc/draft-yu-ccamp-sla-assurance-optical-yang/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">
+        Discussion of this document takes place on the
+        Common Control and Measurement Plane Working Group mailing list (<span><a href="mailto:ccamp@ietf.org">mailto:ccamp@ietf.org</a></span>),
+        which is archived at <span><a href="https://mailarchive.ietf.org/arch/browse/ccamp/">https://mailarchive.ietf.org/arch/browse/ccamp/</a></span>.
+        Subscribe at <span><a href="https://www.ietf.org/mailman/listinfo/ccamp/">https://www.ietf.org/mailman/listinfo/ccamp/</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+<p id="section-note.1-4">Source for this draft and an issue tracker can be found at
+        <span><a href="https://github.com/hyu2010/sla_assurance_optical">https://github.com/hyu2010/sla_assurance_optical</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 21 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2026 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-sample-use-cases" class="internal xref">Sample Use Cases</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-proactive-resilience-assura" class="internal xref">Proactive resilience assurance for high-availability business services</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-deterministic-latency-assur" class="internal xref">Deterministic Latency Assurance for Latency-Sensitive Services</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-dynamic-bandwidth-allocatio" class="internal xref">Dynamic Bandwidth Allocation for Cloud-Network Synergy</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-sla-assurance-issues" class="internal xref">SLA assurance issues</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-bandwidth-issues" class="internal xref">Bandwidth Issues</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.1">
+                    <p id="section-toc.1-1.4.2.1.2.1.1"><a href="#section-4.1.1" class="auto internal xref">4.1.1</a>.  <a href="#name-traffic-spike-sudden-increa" class="internal xref">Traffic spike (sudden increase in traffic)</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.2">
+                    <p id="section-toc.1-1.4.2.1.2.2.1"><a href="#section-4.1.2" class="auto internal xref">4.1.2</a>.  <a href="#name-bandwidth-utilization-excee" class="internal xref">Bandwidth utilization exceeds threshold defined in the SLA</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.3">
+                    <p id="section-toc.1-1.4.2.1.2.3.1"><a href="#section-4.1.3" class="auto internal xref">4.1.3</a>.  <a href="#name-network-bit-error-rate-or-p" class="internal xref">Network bit error rate (or packet loss rate) higher than allowed threshold</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-network-and-service-availab" class="internal xref">Network and service availability issues</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.1">
+                    <p id="section-toc.1-1.4.2.2.2.1.1"><a href="#section-4.2.1" class="auto internal xref">4.2.1</a>.  <a href="#name-service-outage" class="internal xref">Service outage</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.2">
+                    <p id="section-toc.1-1.4.2.2.2.2.1"><a href="#section-4.2.2" class="auto internal xref">4.2.2</a>.  <a href="#name-transient-service-interrupt" class="internal xref">Transient service interruption</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.3">
+                    <p id="section-toc.1-1.4.2.2.2.3.1"><a href="#section-4.2.3" class="auto internal xref">4.2.3</a>.  <a href="#name-failover-protection-failure" class="internal xref">Failover protection failure</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.4">
+                    <p id="section-toc.1-1.4.2.2.2.4.1"><a href="#section-4.2.4" class="auto internal xref">4.2.4</a>.  <a href="#name-protection-on-the-same-rout" class="internal xref">Protection on the same route</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.5">
+                    <p id="section-toc.1-1.4.2.2.2.5.1"><a href="#section-4.2.5" class="auto internal xref">4.2.5</a>.  <a href="#name-risk-of-traffic-rerouting-d" class="internal xref">Risk of traffic rerouting (during failover/reconvergence)</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.6">
+                    <p id="section-toc.1-1.4.2.2.2.6.1"><a href="#section-4.2.6" class="auto internal xref">4.2.6</a>.  <a href="#name-service-performance-degrada" class="internal xref">Service performance degradation</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.7">
+                    <p id="section-toc.1-1.4.2.2.2.7.1"><a href="#section-4.2.7" class="auto internal xref">4.2.7</a>.  <a href="#name-cpe-access-vulnerability-ha" class="internal xref">CPE access vulnerability/hazard</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
+                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-latency-issues" class="internal xref">Latency issues</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3.2.1">
+                    <p id="section-toc.1-1.4.2.3.2.1.1"><a href="#section-4.3.1" class="auto internal xref">4.3.1</a>.  <a href="#name-operating-latency-exceeds-a" class="internal xref">Operating latency exceeds allowed limit</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3.2.2">
+                    <p id="section-toc.1-1.4.2.3.2.2.1"><a href="#section-4.3.2" class="auto internal xref">4.3.2</a>.  <a href="#name-protection-switching-latenc" class="internal xref">Protection switching latency exceeds allowed limit</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-sla-assurance-issue-managem" class="internal xref">SLA Assurance Issue Management Architecture and SLA Assurance Capability</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-interworking-with-sain" class="internal xref">Interworking with SAIN</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-relationship-with-incident" class="internal xref">Relationship with Incident</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-interworking-with-actn-fram" class="internal xref">Interworking with ACTN framework</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-sla-assurance-data-model-de" class="internal xref">SLA Assurance Data Model Design</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-overview" class="internal xref">Overview</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-sla-assurance-issue-identif" class="internal xref">SLA assurance issue identification and observability</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3">
+                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-sla-assurance-issue-resolut" class="internal xref">SLA assurance issue resolution and capability list</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-sla-assurance-yang-module" class="internal xref">SLA Assurance YANG module</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-the-ietf-xml-registry" class="internal xref">The "IETF XML" Registry</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-the-yang-module-names-regis" class="internal xref">The "YANG Module Names" Registry</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
+                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
+                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">Service Level Agreement (SLA) assurance management in optical transport networks concerns the continuous monitoring, analysis, and management of network conditions that may impact the performance, availability, and reliability of services. Its objective is to detect potential issues proactively, diagnose their root causes, and initiate corrective actions to prevent SLA violations. Several standards already exist in this area. SAIN <span>[<a href="#RFC9417" class="cite xref">RFC9417</a>]</span> and <span>[<a href="#RFC9418" class="cite xref">RFC9418</a>]</span> defines an architecture and a YANG model for network service assurance, respectively. <span>[<a href="#I-D.ietf-nmop-network-incident-yang" class="cite xref">I-D.ietf-nmop-network-incident-yang</a>]</span> defines a YANG model for the network incident lifecycle management. It aims to provide a standard way to report, diagnose, and help resolve network incidents which may cause SLA violations.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">However, several gaps remain in the existing standards and their associated YANG models with respect to supporting SLA assurance management in optical transport networks. First, the SAIN framework focuses on the detection and resolution of symptoms, that is, conditions indicating that a service instance or subservice is not operating in a fully healthy state. In optical transport networks, however, undesirable network conditions may exist that increase the risk of SLA violations while remaining asymptomatic. For example, multiple service paths may traverse fiber links deployed within the same trench, thereby introducing a common point of failure. Such conditions do not necessarily result in observable service degradation and, therefore, may not be identified through symptom-based monitoring mechanisms.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">In addition, SLA assurance monitoring, in some cases, needs to detect and report events defined by SLA policies, such as bandwidth utilization exceeding a specified threshold. The threshold values are defined by the user, reflecting user’s perception of desired network conditions. The occurrence of such events does not necessarily indicate the presence of an incident affecting service health. Instead, event reporting may serve as a precautionary mechanism requested by the user. A mechanism and a YANG model are therefore needed to support the detection and reporting of such events.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">Thirdly, some optical network conditions, such as fiber attenuation, may degrade silently and gradually before resulting in observable incidents. These conditions may persist for an extended period of time. For SLA assurance management in optical networks, it is preferable to define, detect, and resolve such issues proactively rather than waiting for them to escalate into incidents.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5">To address these optical network specific challenges, an issue-centric SLA assurance solution is specified. An issue is an optical network condition that, if unaddressed, may lead to SLA violations and incidents.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-6">This document defines a YANG data model for SLA assurance management in optical networks. The model defines optical network SLA assurance issues and their corresponding resolutions.<a href="#section-1-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="conventions-and-definitions">
+<section id="section-2">
+      <h2 id="name-conventions-and-definitions">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
+      </h2>
+<p id="section-2-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+"<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">The following terms are defined in <span>[<a href="#RFC8632" class="cite xref">RFC8632</a>]</span>, <span>[<a href="#RFC9543" class="cite xref">RFC9543</a>]</span>, <span>[<a href="#I-D.ietf-nmop-terminology" class="cite xref">I-D.ietf-nmop-terminology</a>]</span> and are not redefined here:<a href="#section-2-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-2-3.1">
+          <p id="section-2-3.1.1">Event<a href="#section-2-3.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-2-3.2">
+          <p id="section-2-3.2.1">Incident<a href="#section-2-3.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-2-3.3">
+          <p id="section-2-3.3.1">Anomaly<a href="#section-2-3.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-2-3.4">
+          <p id="section-2-3.4.1">Cause<a href="#section-2-3.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-2-3.5">
+          <p id="section-2-3.5.1">Characteristic<a href="#section-2-3.5.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-2-3.6">
+          <p id="section-2-3.6.1">SLA (Service Level Agreement)<a href="#section-2-3.6.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-2-3.7">
+          <p id="section-2-3.7.1">SLO (Service Level Objective)<a href="#section-2-3.7.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-2-4">The following terms are defined in this document:<a href="#section-2-4" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-2-5">
+        <dt id="section-2-5.1">SLA assurance issue:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-5.2">
+          <p id="section-2-5.2.1">A network condition that, if not addressed in time, may lead to SLA violations of services and incidents. An issue may either be symptomatic or asymptomatic. Symptomatic issues cause visible impacts to the health of services. Asymptomatic issues, in contrast, do not impact services alone. They lead to SLA violations in conjunction with other conditions or events, such as a service reroute.<a href="#section-2-5.2.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-5.3">SLA assurance issue type:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-5.4">
+          <p id="section-2-5.4.1">A class used for the classification of SLA assurance issues. Every issue belongs to a certain type. There is a limited number of the types of assurance issues in optical networks.<a href="#section-2-5.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-5.5">SLA assurance capability:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-5.6">
+          <p id="section-2-5.6.1">The ability to detect SLA assurance issues and initiate preemptive actions to prevent SLA violations. This ability is measured against how many different types of issues the SLA assurance system can handle.<a href="#section-2-5.6.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-5.7">SLA assurance issue classification:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-5.8">
+          <p id="section-2-5.8.1">The process to identify the type of an issue when it is raised. It is an SLA assurance capability.<a href="#section-2-5.8.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-5.9">Issue Server:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-5.10">
+          <p id="section-2-5.10.1">An entity that is responsible for detecting, classifying, and reporting SLA assurance issues, and performing issue solutions to prevent SLA violations.<a href="#section-2-5.10.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-5.11">Fiber same cable:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-5.12">
+          <p id="section-2-5.12.1">A pair of optical fibers traverse the same physical cable sheath (i.e., both fibers are contained within the same fiber cable).<a href="#section-2-5.12.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-5.13">Fiber same trench:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-5.14">
+          <p id="section-2-5.14.1">A pair of optical fibers are deployed within the same trench/duct route (i.e., both fibers share the same underground pipeline or trench corridor).<a href="#section-2-5.14.1" class="pilcrow">¶</a></p>
+</dd>
+      <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="sample-use-cases">
+<section id="section-3">
+      <h2 id="name-sample-use-cases">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-sample-use-cases" class="section-name selfRef">Sample Use Cases</a>
+      </h2>
+<div id="proactive-resilience-assurance-for-high-availability-business-services">
+<section id="section-3.1">
+        <h3 id="name-proactive-resilience-assura">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-proactive-resilience-assura" class="section-name selfRef">Proactive resilience assurance for high-availability business services</a>
+        </h3>
+<p id="section-3.1-1">Modern optical transport networks underpin mission-critical enterprise and carrier-grade services that require continuous availability and strict SLA compliance. This use case focuses on proactively assuring network resilience to prevent service degradation and minimize the impact of potential failures.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">In this scenario, the optical transport network continuously monitors key performance indicators such as signal quality, optical power levels, latency, and error rates across wavelengths and optical links, as well as ODUk connections. Advanced analytics and telemetry are used to detect early signs of degradation, including fiber attenuation, amplifier drift, or emerging congestion patterns.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1-3">When potential risk conditions are identified, the system proactively evaluates network topology and service dependencies to assess impact on high-availability business services. If a risk of SLA violation is detected, automated or semi-automated remediation actions are triggered. These may include traffic rerouting via pre-provisioned protection paths, wavelength re-optimization, or activation of restoration mechanisms in the optical layer.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-4">The objective is to ensure near-zero interrupted service delivery (surpassing the five-nines availability) for critical applications, such as financial trading, cloud connectivity, and real-time enterprise communications. By shifting from reactive fault management to proactive resilience assurance, operators can significantly reduce downtime, improve SLA adherence, and enhance overall customer experience in optical transport networks.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="deterministic-latency-assurance-for-latency-sensitive-services">
+<section id="section-3.2">
+        <h3 id="name-deterministic-latency-assur">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-deterministic-latency-assur" class="section-name selfRef">Deterministic Latency Assurance for Latency-Sensitive Services</a>
+        </h3>
+<p id="section-3.2-1">Deterministic SLA assurance in optical transport networks is a use case that aims to ensure stable and predictable service performance for latency-sensitive applications, such as AI distributed training, telemedicine, industrial automation, and immersive XR services. These applications require stringent guarantees on end-to-end latency, jitter, packet loss, bandwidth availability, and service continuity.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-2">In this use case, an optical transport service is provisioned with explicit SLA objectives that define the required deterministic performance characteristics. During service operation, the network continuously monitors both the service state and the underlying optical transport infrastructure through real-time telemetry collection. The monitored information may include end-to-end path latency, optical link quality, bandwidth utilization, wavelength continuity, congestion conditions, and other transport performance indicators relevant to SLA fulfillment.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2-3">As network conditions dynamically evolve, the system identifies conditions that may threaten the SLA commitments of active services before visible service degradation occurs. Such conditions may include increasing congestion, abnormal latency variation, optical signal degradation, or predicted failures affecting the active transport path. The network then evaluates alternative optical transport paths and service optimization options capable of preserving the required SLA characteristics.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2-4">The objective of this use case is to maintain continuous SLA compliance throughout the service lifecycle by enabling adaptive transport behavior in response to changing network conditions. This improves service reliability, minimizes performance instability and disruption, and enhances the capability of optical transport networks to support mission-critical and performance-sensitive applications.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="dynamic-bandwidth-allocation-for-cloud-network-synergy">
+<section id="section-3.3">
+        <h3 id="name-dynamic-bandwidth-allocatio">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-dynamic-bandwidth-allocatio" class="section-name selfRef">Dynamic Bandwidth Allocation for Cloud-Network Synergy</a>
+        </h3>
+<p id="section-3.3-1">Cloud–Network Synergy-Based Dynamic Bandwidth Allocation is a use case in optical transport networks that enables adaptive allocation of transport resources based on coordinated demands from cloud applications and network conditions. It targets service scenarios such as AI training workloads, distributed computing, cloud bursting, and large-scale data synchronization, where bandwidth demand is highly dynamic and time-varying.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-2">In this use case, cloud applications continuously generate workload signals that reflect their resource requirements, including bandwidth demand, traffic intensity, latency sensitivity, and service priority. These requirements are communicated to the optical transport network through a cloud–network interface. At the same time, the optical transport network maintains real-time visibility of available capacity, including wavelength availability, link utilization, path constraints, and operational state across the optical infrastructure.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.3-3">Based on the correlation between cloud-side demand signals and network-side resource state, the system determines when and where bandwidth adjustments are required. When increased demand is detected, the network evaluates feasible optical path and wavelength allocation options that satisfy service constraints. Conversely, when demand decreases, allocated resources may be released or re-optimized to improve overall network efficiency.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-4">The objective of this use case is to achieve efficient and elastic utilization of optical transport resources while ensuring that cloud application performance requirements are consistently met. By enabling coordinated decision-making between cloud workloads and optical network control, the system improves resource utilization, reduces congestion by dynamic bandwidth control of hard-pipes, and enhances the responsiveness of the transport network to dynamic application demands.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="sla-assurance-issues">
+<section id="section-4">
+      <h2 id="name-sla-assurance-issues">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-sla-assurance-issues" class="section-name selfRef">SLA assurance issues</a>
+      </h2>
+<p id="section-4-1">As shown in <a href="#tab-1" class="auto internal xref">Table 1</a>, SLA assurance issues in optical networks can be classified, based on their impact, into three categories: (1) those affecting service bandwidth, (2) those affecting network and service availability, and (3) those introducing traffic delay.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<span id="name-sla-assurance-issues-2"></span><div id="tab-1">
+<table class="center" id="table-1">
+        <caption>
+<a href="#table-1" class="selfRef">Table 1</a>:
+<a href="#name-sla-assurance-issues-2" class="selfRef">SLA Assurance Issues</a>
+        </caption>
+<thead>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Issue category</td>
+            <td class="text-left" rowspan="1" colspan="1">SLA assurance issues</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left" rowspan="3" colspan="1">Bandwidth</td>
+            <td class="text-left" rowspan="1" colspan="1">Traffic spike (sudden increase in traffic)</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Utilization exceeds threshold defined in the SLA</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Network bit error rate / packet loss rate higher than allowed threshold</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="8" colspan="1">Network and service availability</td>
+            <td class="text-left" rowspan="1" colspan="1">Service outage</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Transient service interruption</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Failover protection failure</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Protection on the same route</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Protection on the same route</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Risk of traffic rerouting (during failover/reconvergence)</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Service performance degradation</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">customer premises equipment (CPE) access vulnerability/hazard</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="2" colspan="1">Delay</td>
+            <td class="text-left" rowspan="1" colspan="1">Operating latency exceeds allowed limit</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Protection switching latency exceeds allowed limit</td>
+          </tr>
+        </tbody>
+      </table>
+</div>
+<p id="section-4-3">Most SLA assurance issues, if left unaddressed, are expected to eventually result in SLA violations and incidents. However, exceptions exist. For example, an issue indicating that bandwidth utilization has exceeded an SLA-defined threshold does not necessarily imply the presence of a service health problem or any network equipment failures, particularly when the configured threshold provides a substantial operational margin. In such cases, the impact analysis included in the issue report <span class="bcp14">SHOULD</span> indicate that no immediate service impact is expected. The report <span class="bcp14">MAY</span> also recommend that the user review and adjust the threshold value to better align with the intended monitoring objectives.<a href="#section-4-3" class="pilcrow">¶</a></p>
+<p id="section-4-4">Issues that could eventually lead to SLA violations may be either symptomatic or asymptomatic. For symptomatic issues, the associated symptoms are observable at the service layer and indicate degradation in the health of one or more services. In contrast, asymptomatic issues may not manifest as observable symptoms in any affected service. Despite this distinction, the underlying causes of both types of issues may originate from abnormal conditions in the underlay optical transport network that provides connectivity for the services. More specifically, there are three major sources of possible root causes spanning in the three layers of transport networks: (1) abnormal conditions in optical fibers, (2) error conditions in optical WDM services, and (3) bit errors in OTN payloads. SLA assurance analysis must provide accurate diagnosis of these issues and identify their underlying causes.<a href="#section-4-4" class="pilcrow">¶</a></p>
+<p id="section-4-5">It should also be noted that certain SLA terms permit temporary service outages or transient service interruptions. This is common, for example, for best-effort services or services without protection mechanisms. In such cases, the distinction between issues and incidents may become less clear, and the two concepts may overlap. Accordingly, issue management <span class="bcp14">MAY</span> defer the handling of such cases to incident management processes.<a href="#section-4-5" class="pilcrow">¶</a></p>
+<p id="section-4-6">Each issue is described in more detail in the following subsections.<a href="#section-4-6" class="pilcrow">¶</a></p>
+<div id="bandwidth-issues">
+<section id="section-4.1">
+        <h3 id="name-bandwidth-issues">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-bandwidth-issues" class="section-name selfRef">Bandwidth Issues</a>
+        </h3>
+<p id="section-4.1-1">Bandwidth issues are service assurance conditions that impact the capacity, throughput, or traffic-carrying efficiency of optical transport networks.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<div id="traffic-spike-sudden-increase-in-traffic">
+<section id="section-4.1.1">
+          <h4 id="name-traffic-spike-sudden-increa">
+<a href="#section-4.1.1" class="section-number selfRef">4.1.1. </a><a href="#name-traffic-spike-sudden-increa" class="section-name selfRef">Traffic spike (sudden increase in traffic)</a>
+          </h4>
+<p id="section-4.1.1-1">This issue refers to the network condition that the customer-side interface receives a large volume of burst traffic within an extremely short period of time (on the order of milliseconds). When the instantaneous rate of microburst traffic exceeds the device’s forwarding capacity, the device buffers the burst traffic for later transmission. If the device does not have sufficient buffer space, the excess traffic is dropped, resulting in congestion and packet loss.<a href="#section-4.1.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="bandwidth-utilization-exceeds-threshold-defined-in-the-sla">
+<section id="section-4.1.2">
+          <h4 id="name-bandwidth-utilization-excee">
+<a href="#section-4.1.2" class="section-number selfRef">4.1.2. </a><a href="#name-bandwidth-utilization-excee" class="section-name selfRef">Bandwidth utilization exceeds threshold defined in the SLA</a>
+          </h4>
+<p id="section-4.1.2-1">This issue refers to the network condition that the customer-side service traffic exceeds the user-defined threshold, posing a risk of bandwidth overutilization. This issue can be quantified as the percentage of cumulative time during a specified period in which the service bandwidth utilization exceeds the SLA-defined threshold.<a href="#section-4.1.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="network-bit-error-rate-or-packet-loss-rate-higher-than-allowed-threshold">
+<section id="section-4.1.3">
+          <h4 id="name-network-bit-error-rate-or-p">
+<a href="#section-4.1.3" class="section-number selfRef">4.1.3. </a><a href="#name-network-bit-error-rate-or-p" class="section-name selfRef">Network bit error rate (or packet loss rate) higher than allowed threshold</a>
+          </h4>
+<p id="section-4.1.3-1">This issue refers to the problem that the packet loss on the customer side causes the available bandwidth to fall short of the user’s requirements.<a href="#section-4.1.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.1.3-2">Possible cause at the OTN layer: Bit errors are being generated at the electrical-layer service level, specifically within digital layer channels (such as ODUk and OTUk), indicating that the transmission at the digital wrapper/virtual container layer is experiencing signal corruption. This may result from impairments in the physical transmission path or intermediate equipment, and can lead to degraded service quality or potential data integrity issues at the service layer.<a href="#section-4.1.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.1.3-3">Possible cause at the DWDM layer: Corrected bit errors are occurring at the optical-layer (OCh) service level, indicating that the optical channel is experiencing transmission impairments that require error correction mechanisms to recover affected data. While forward error correction (FEC) is able to detect and correct these errors, their presence suggests degradation in optical signal quality, which may be caused by factors such as optical attenuation, noise, dispersion, or aging/impairment of the transmission path, and could eventually lead to uncorrectable errors if conditions worsen.<a href="#section-4.1.3-3" class="pilcrow">¶</a></p>
+<p id="section-4.1.3-4">Possible cause at the fiber layer: The logical fiber path traversed by the service is experiencing degradation in terms of attenuation, indicating increased optical loss along the transmission route. This deterioration in signal strength may be caused by fiber aging, connector or splice losses, bending losses, or other impairments in the optical path, and can negatively impact signal quality and overall service performance.<a href="#section-4.1.3-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="network-and-service-availability-issues">
+<section id="section-4.2">
+        <h3 id="name-network-and-service-availab">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-network-and-service-availab" class="section-name selfRef">Network and service availability issues</a>
+        </h3>
+<p id="section-4.2-1">Network and service availability issues are service assurance conditions that impact the ability of optical transport networks to maintain continuous and reliable service delivery.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<div id="service-outage">
+<section id="section-4.2.1">
+          <h4 id="name-service-outage">
+<a href="#section-4.2.1" class="section-number selfRef">4.2.1. </a><a href="#name-service-outage" class="section-name selfRef">Service outage</a>
+          </h4>
+<p id="section-4.2.1-1">The service experiences either a network-side interruption or a customer-side interruption, resulting in a loss of connectivity or service availability.<a href="#section-4.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.1-2">Possible cause at the OTN layer: The service experiences an interruption at the electrical-layer service level (ODUk/OTUk/VC), indicating a loss of continuity in the digital wrapper/virtual container transport layer. This type of failure typically results in a complete break in the ODUk/OTUk signal path, causing service disruption and potential traffic loss across the affected connection, and may be triggered by transport defects, equipment failures, or upstream/downstream signal degradation.<a href="#section-4.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.1-3">Possible cause at the DWMD layer: The service experiences an interruption at the optical (OCh/OMS/OTS) service level, indicating a loss of continuity in the optical channel transport path. This results in a complete failure of the optical (OCh/OMS/OTS) signal transmission, leading to service outage and traffic disruption. Such an interruption may be caused by severe optical impairments, fiber cuts, transmitter/receiver failures, or failures in optical switching elements along the transmission path.<a href="#section-4.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.1-4">Possible cause at the fiber medium layer: The logical fiber path traversed by the service experiences an interruption, indicating a complete loss of continuity along the virtualized or logical optical transport route. This results in a service outage due to the inability of the end-to-end path to maintain signal transmission. Such an interruption may be caused by failures in underlying physical fiber links, intermediate network elements, or logical path provisioning issues within the optical transport network.<a href="#section-4.2.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="transient-service-interruption">
+<section id="section-4.2.2">
+          <h4 id="name-transient-service-interrupt">
+<a href="#section-4.2.2" class="section-number selfRef">4.2.2. </a><a href="#name-transient-service-interrupt" class="section-name selfRef">Transient service interruption</a>
+          </h4>
+<p id="section-4.2.2-1">Service experiences momentary interruptions. For instance, optical power fluctuations in the fiber may cause short bursts of bit errors or packet loss at higher layers, also leading to transient service interruptions.<a href="#section-4.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-2">Possible cause at the OTN layer: The service’s electrical-layer (ODU/OSU) working path has switched to a protection path, resulting in a brief service interruption (service hit or transient outage). This switchover indicates that a fault or degradation was detected on the original working route, triggering protection mechanisms to reroute traffic; however, the switching process introduces a short-lived traffic disruption during path convergence.<a href="#section-4.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-3">Possible cause at the DWDM layer: The OCh service’s optical-layer working path has switched to a protection path, resulting in a brief service interruption (transient outage or service hit). This indicates that degradation or a failure was detected on the original optical channel working route, triggering protection mechanisms to reroute traffic. During the switching and path convergence process, a short-lived disruption may occur, leading to a momentary service blip before normal transmission resumes on the protection path.<a href="#section-4.2.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-4">Possible cause at the fiber layer: Abnormal optical power fluctuations occur on the fiber path traversed by the service, causing transient instability in the received signal level. These rapid variations in optical power can lead to momentary loss of signal integrity, triggering a brief service interruption (service hit or flash outage). Such behavior is typically associated with physical-layer impairments such as connector issues, micro-bending, fiber movement, or unstable optical components along the transmission path.<a href="#section-4.2.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="failover-protection-failure">
+<section id="section-4.2.3">
+          <h4 id="name-failover-protection-failure">
+<a href="#section-4.2.3" class="section-number selfRef">4.2.3. </a><a href="#name-failover-protection-failure" class="section-name selfRef">Failover protection failure</a>
+          </h4>
+<p id="section-4.2.3-1">This issue may rise when the protection route of the service experiences an interruption, resulting in protection failure. This indicates that the backup (protection) path is unavailable or has lost continuity, preventing the protection mechanism from successfully taking over in the event of a working path fault. As a result, the service is left without effective redundancy, increasing the risk of service disruption or prolonged outage if a failure occurs on the active path.<a href="#section-4.2.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.3-2">Possible cause at the OTN layer: The protection route at the electrical-layer (ODU/OTU/VC) level experiences an interruption, indicating a loss of continuity in the backup ODU/OUT/VC path. As a result, the protection path becomes unavailable, preventing it from serving as a valid failover for the working route in the event of a failure. This condition reduces service resilience and increases the risk of service disruption if the primary electrical-layer path degrades or fails.<a href="#section-4.2.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.3-3">Possible cause at the DWDM layer: The protection route at the optical-layer (OCh) experiences an interruption, meaning the backup OCh (or OCh protection path) has lost continuity or become unavailable. As a result, the optical protection mechanism cannot successfully take over traffic in the event of a failure on the working channel, thereby reducing service resilience and increasing the risk of service outage under fault conditions.<a href="#section-4.2.3-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.3-4">Possible cause at the fiber layer: The protection fiber traversed by the service—referring to the logical fiber path not currently used by the working route—experiences an interruption, indicating a loss of continuity on the backup transport path. Since this logical fiber represents the protection route, its failure renders the protection mechanism unavailable for failover, thereby reducing overall service resilience and increasing the risk of service disruption if the working path subsequently fails.<a href="#section-4.2.3-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="protection-on-the-same-route">
+<section id="section-4.2.4">
+          <h4 id="name-protection-on-the-same-rout">
+<a href="#section-4.2.4" class="section-number selfRef">4.2.4. </a><a href="#name-protection-on-the-same-rout" class="section-name selfRef">Protection on the same route</a>
+          </h4>
+<p id="section-4.2.4-1">The working and protection paths of the service partially overlap, such as sharing common nodes or fiber links within the same Shared Risk Link Group (SRLG), which may compromise the effectiveness of the protection mechanism in case of a failure.<a href="#section-4.2.4-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.4-2">Possible cause at the OTN layer: The service’s electrical-layer (ODU/VC) working and protection paths share a common SRLG (Shared Risk Link Group), as identified through protection segment analysis. This indicates that the supposedly redundant primary and backup routes are not fully disjoint and may be simultaneously affected by a single underlying failure domain (e.g., shared fiber segment, duct, node, or equipment). As a result, the effectiveness of protection is compromised, increasing the risk of concurrent working and protection path failure and potential service outage under fault conditions. Similarly, the issue may also rise when the service’s electrical-layer working and protection paths traverse the same network element, indicating that both primary and backup routes are not node-disjoint. This introduces a shared risk at the equipment level, meaning that a single failure or maintenance event on that network element could simultaneously impact both working and protection paths.<a href="#section-4.2.4-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.4-3">Possible cause at the DWDM layer: The service’s optical-layer (OCh) working and protection paths share a common SRLG, indicating that the primary and backup routes are not fully physically diverse. This means both paths may traverse a shared risk element—such as a fiber segment, conduit, node, or optical equipment—creating a single point of correlated failure. As a result, the protection scheme’s effectiveness is reduced, increasing the risk that a single failure could simultaneously impact both working and protection OCh paths, potentially leading to service outage. The issue may also rise if the OCh working and protection paths pass through the same network element (NE). This creates a shared risk at the equipment level, where a single device failure, software fault, or maintenance activity on that network element could simultaneously impact both working and protection optical channels.<a href="#section-4.2.4-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.4-4">Possible cause at the fiber layer: Fiber same cable and fiber same trench scenarios may also lead to a “protection on the same route” issue, where the working and protection paths are no longer truly physically diverse. In such cases, although logical routing appears to provide redundancy, both fiber paths share the same underlying physical infrastructure—either within the same cable or the same trench/duct corridor. This creates a shared risk domain, meaning that a single physical failure event (such as cable cut, trench excavation damage, or environmental impact) can simultaneously affect both the working and protection fibers. As a result, the protection mechanism may fail to provide effective redundancy, significantly increasing the risk of concurrent path failure and resulting service interruption.<a href="#section-4.2.4-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="risk-of-traffic-rerouting-during-failoverreconvergence">
+<section id="section-4.2.5">
+          <h4 id="name-risk-of-traffic-rerouting-d">
+<a href="#section-4.2.5" class="section-number selfRef">4.2.5. </a><a href="#name-risk-of-traffic-rerouting-d" class="section-name selfRef">Risk of traffic rerouting (during failover/reconvergence)</a>
+          </h4>
+<p id="section-4.2.5-1">A service may be exposed to an increased risk of SLA violations during network failover or routing reconvergence events. Although protection switching and restoration mechanisms are designed to maintain service continuity, the newly selected path may exhibit different characteristics from the original path, such as increased latency, reduced available bandwidth, additional optical impairments, or a higher detour factor. These changes may cause one or more SLA performance objectives to be approached or exceeded, even if the service remains operational. Accordingly, the Issue Server <span class="bcp14">SHOULD</span> identify services that are susceptible to such rerouting events, assess the potential impact on SLA compliance, and report the associated risk before or immediately after the rerouting occurs, thereby enabling proactive operational actions to mitigate potential SLA violations.<a href="#section-4.2.5-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.5-2">Possible cause at the OTN layer: TBD<a href="#section-4.2.5-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.5-3">Possible cause at the DWDM layer: TBD<a href="#section-4.2.5-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.5-4">Possible cause at the fiber layer: TBD<a href="#section-4.2.5-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="service-performance-degradation">
+<section id="section-4.2.6">
+          <h4 id="name-service-performance-degrada">
+<a href="#section-4.2.6" class="section-number selfRef">4.2.6. </a><a href="#name-service-performance-degrada" class="section-name selfRef">Service performance degradation</a>
+          </h4>
+<p id="section-4.2.6-1">The service experiences performance degradation, indicating a decline in end-to-end service quality compared to normal operating conditions. One example could be the degradation in Optical Channel (OCH) performance - performance degradation at the optical layer, such as post-FEC errors, may cause impairments at the service level (e.g., bit errors and packet loss).<a href="#section-4.2.6-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.6-2">Possible cause at the OTN layer: The service experiences performance degradation at the electrical-layer (ODU/VC) service level, typically manifested as error-related performance counters or alarms. This indicates that the ODU/VC transport layer is suffering from signal quality deterioration, leading to increased bit errors, errored seconds, or other degradation indicators. Such conditions are often associated with impairments in the underlying transmission path, equipment issues, or signal interference, and may degrade service quality even if the connection remains up.<a href="#section-4.2.6-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.6-3">Possible cause at the DWDM layer: Performance degradation occurs at the optical-layer (OCh) service level, typically manifested as pre-FEC bit error rate (BER) threshold violations or related performance degradations. This indicates that the optical channel is experiencing signal quality deterioration before forward error correction is applied, suggesting impairments such as optical noise, attenuation, dispersion, or aging of optical components. Although FEC may still be able to recover the transmitted data, persistent or worsening pre-FEC error conditions can reduce transmission margins and may eventually lead to uncorrectable errors or service interruption.<a href="#section-4.2.6-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.6-4">Possible cause at the fiber layer: The logical fiber path experiences performance degradation, typically indicated by fiber attenuation exceeding the defined threshold (for example, surpassing the designed End-of-Life (EOL) attenuation limit). This suggests that the optical transmission path is suffering from excessive signal loss, which may be caused by fiber aging, connector or splice degradation, bending losses, contamination, or other physical impairments. Excessive attenuation reduces optical power margins and can negatively impact signal quality, increasing the risk of transmission errors, instability, or eventual service interruption.<a href="#section-4.2.6-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="cpe-access-vulnerabilityhazard">
+<section id="section-4.2.7">
+          <h4 id="name-cpe-access-vulnerability-ha">
+<a href="#section-4.2.7" class="section-number selfRef">4.2.7. </a><a href="#name-cpe-access-vulnerability-ha" class="section-name selfRef">CPE access vulnerability/hazard</a>
+          </h4>
+<p id="section-4.2.7-1">This issue refers to the problem that the protection configuration of the service access segment does not match the required availability grade, or the working and protection paths within the access segment share the same SRLG. This indicates that the access-side protection design does not provide the level of resilience required by the service SLA, either because the configured protection mechanism is insufficient or because the primary and backup access paths are not fully risk-disjoint. As a result, a single physical or logical failure event may simultaneously affect both working and protection paths, reducing service availability and increasing the risk of service interruption.<a href="#section-4.2.7-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.7-2">Possible cause at the OTN layer: The protection configuration of the access segment does not match the configured service availability grade. For example, the access segment is deployed with a single uplink architecture, while the service availability requirement is configured for dual-uplink protection. This mismatch indicates that the actual redundancy capability of the access network is insufficient to meet the intended SLA or resilience target. As a result, the service may not achieve the expected availability level, and a single uplink failure could directly lead to service interruption.<a href="#section-4.2.7-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.7-3">Possible cause at the DWDM layer: TBD<a href="#section-4.2.7-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.7-4">Possible cause at the fiber layer: There is a shared SRLG (Shared Risk Link Group) risk between the working and protection paths of the access segment, indicating that the primary and backup access routes are not fully physically or logically diverse. Both paths may rely on the same underlying risk domain—such as shared fiber infrastructure, conduit, node, or access equipment—meaning that a single failure event could simultaneously impact both working and protection connections. As a result, the effectiveness of the access protection mechanism is reduced, increasing the risk of service interruption and lowering overall service resilience.<a href="#section-4.2.7-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="latency-issues">
+<section id="section-4.3">
+        <h3 id="name-latency-issues">
+<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-latency-issues" class="section-name selfRef">Latency issues</a>
+        </h3>
+<p id="section-4.3-1">Latency issues are service assurance conditions that affect the delay experienced by traffic traversing optical transport networks. These issues may be introduced by suboptimal routing, increased path length due to protection switching, congestion in optical or OTN layers, or processing delays within network elements.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<div id="operating-latency-exceeds-allowed-limit">
+<section id="section-4.3.1">
+          <h4 id="name-operating-latency-exceeds-a">
+<a href="#section-4.3.1" class="section-number selfRef">4.3.1. </a><a href="#name-operating-latency-exceeds-a" class="section-name selfRef">Operating latency exceeds allowed limit</a>
+          </h4>
+<p id="section-4.3.1-1">The service’s current working latency exceeds the defined threshold, indicating that the end-to-end transmission delay is out of the acceptable range. This may be due to latency threshold violations or an excessive detour factor (route inefficiency), where traffic is forced onto a longer-than-optimal path.<a href="#section-4.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-2">Possible causes at the OTN layer: The service may experience a latency-related SLA issue due to changes in the routing characteristics of the working electrical-layer (ODU) service path. For example, an electrical-layer path switch may result in the newly selected working path exhibiting a higher end-to-end latency than the original route, causing the measured latency to exceed the configured threshold. In addition, the new routing may introduce a detour factor violation. The detour factor is defined as the ratio of the measured or estimated latency to the ideal latency, where the ideal latency is calculated as the shortest-path distance in the network topology multiplied by the fiber latency coefficient. If the actual routing deviates significantly from the optimal shortest path, the resulting increase in path length and transmission delay may cause the detour factor to exceed the acceptable limit. Both conditions indicate that the working ODU service path no longer satisfies the latency-related constraints specified by the SLA.<a href="#section-4.3.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-3">Possible causes at the DWDM layer: The service may experience a latency-related SLA issue due to changes in the routing characteristics of the working optical path. For example, an optical-layer path switch may result in the newly selected working path exhibiting a higher end-to-end latency than the original route, causing the measured latency to exceed the configured threshold. In addition, the newly established route may lead to a detour factor violation on the working logical fiber. The detour factor is defined as the ratio of the measured or estimated latency to the ideal latency, where the ideal latency is calculated as the shortest-path distance between the two endpoints in the network topology multiplied by the fiber latency coefficient. If the routing of the working logical fiber deviates significantly from the optimal shortest path, the resulting increase in transmission distance and delay may cause the detour factor to exceed the acceptable limit. Both conditions indicate that the current optical-layer routing no longer satisfies the latency-related constraints specified by the SLA.<a href="#section-4.3.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-4">Possible causes at the fiber layer: The service may experience a latency-related SLA issue following a fiber cut along the optical path that triggers a routing switch. As part of the failure recovery process, the rerouted working path may exhibit higher end-to-end latency than the original route, causing the measured latency to exceed the configured threshold. In addition, the rerouted working logical fiber may exhibit a detour factor violation. The detour factor is defined as the ratio of the measured or estimated latency to the ideal latency, where the ideal latency is calculated as the shortest-path distance in the network topology multiplied by the fiber latency coefficient. If the rerouted logical fiber deviates significantly from the optimal shortest path, the resulting increase in transmission distance and delay may cause the detour factor to exceed the acceptable limit. Both conditions indicate that the post-recovery routing no longer satisfies the latency-related constraints specified by the SLA.<a href="#section-4.3.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="protection-switching-latency-exceeds-allowed-limit">
+<section id="section-4.3.2">
+          <h4 id="name-protection-switching-latenc">
+<a href="#section-4.3.2" class="section-number selfRef">4.3.2. </a><a href="#name-protection-switching-latenc" class="section-name selfRef">Protection switching latency exceeds allowed limit</a>
+          </h4>
+<p id="section-4.3.2-1">The service’s current protection latency exceeds the defined threshold, indicating that the end-to-end delay on the protection path is out of the acceptable range.<a href="#section-4.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.3.2-2">Possible cause at the OTN layer: The service experiences a detour factor violation on the protection electrical-layer (ODU) path. The detour factor is defined as the ratio of measured or estimated latency to ideal latency, where ideal latency is calculated as the shortest network path distance between two points multiplied by the fiber latency coefficient. In this case, the protection ODU routing deviates significantly from the optimal shortest path, resulting in excessive transmission delay and causing the detour ratio to exceed the acceptable threshold.<a href="#section-4.3.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.3.2-3">Possible cause at the DWDM layer: The service experiences a detour factor violation on the protection optical-layer (OCh) path. The detour factor is defined as the ratio of measured or estimated latency to ideal latency, where the ideal latency is calculated as the shortest network path distance between two points multiplied by the fiber latency coefficient. In this case, the protection OCh routing significantly deviates from the optimal shortest path, resulting in increased transmission delay and causing the detour ratio to exceed the acceptable threshold.<a href="#section-4.3.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.3.2-4">Possible cause at the fiber layer: The service experiences a detour factor violation on the protection logical fiber path. The detour factor is defined as the ratio of measured or estimated latency to ideal latency, where the ideal latency is calculated as the shortest path distance between two points in the network topology multiplied by the fiber latency coefficient. In this case, the protection logical fiber route significantly deviates from the optimal shortest path, resulting in increased transmission delay and causing the detour ratio to exceed the acceptable threshold.<a href="#section-4.3.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="sla-assurance-issue-management-architecture-and-sla-assurance-capability">
+<section id="section-5">
+      <h2 id="name-sla-assurance-issue-managem">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-sla-assurance-issue-managem" class="section-name selfRef">SLA Assurance Issue Management Architecture and SLA Assurance Capability</a>
+      </h2>
+<span id="name-sla-assurance-issue-manageme"></span><div id="fig-arch">
+<figure id="figure-1">
+        <div class="alignLeft art-ascii-art art-text artwork" id="section-5-1.1">
+<pre>
++-------------------------------------------------------------+
+|                             OSS                             |
++-------------------------------------------------------------+
+       ^                                             |
+       | issue report                                | issue query
+       |                                             v
++-------------------------------------------------------------+
+|                         Issue Server                        |
++-------------------------------------------------------------+
+       ^                ^                ^                ^
+       |                |                |                |
+    alarm/     Network performance  Network Diagnosis    Log
+    event       Metrics/Telemetry    using OAM Test,
+                                           OTDR
+       |                |                |                |
++-------------------------------------------------------------+
+|                      Transport Network                      |
++-------------------------------------------------------------+
+</pre>
+</div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-sla-assurance-issue-manageme" class="selfRef">SLA Assurance Issue Management Architecture</a>
+        </figcaption></figure>
+</div>
+<p id="section-5-2"><a href="#fig-arch" class="auto internal xref">Figure 1</a> illustrates the SLA assurance issue management architecture. The main component for issue management is the Issue Server, which provides capabilities for issue identification and classification, issue reporting, and issue querying. The Issue Server can be deployed on controllers as defined in <span>[<a href="#RFC8969" class="cite xref">RFC8969</a>]</span> within each network domain and interfaces with the OSS. A typical workflow is as follows:<a href="#section-5-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5-3.1">
+          <p id="section-5-3.1.1">The Issue Server derives monitoring policies from the SLA, including the events, performance metrics, and alarms that need to be monitored, and initiates the corresponding monitoring activities.<a href="#section-5-3.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-5-3.2">
+          <p id="section-5-3.2.1">Upon detecting an issue, the Issue Server performs issue classification, impact analysis, and resolution generation, and reports the issue to the OSS.<a href="#section-5-3.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-5-3.3">
+          <p id="section-5-3.3.1">The OSS can query the Issue Server to retrieve information about identified issues, including their status, impact assessment, and recommended resolutions.<a href="#section-5-3.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-5-3.4">
+          <p id="section-5-3.4.1">The OSS can invoke RPC operations exposed by the Issue Server to initiate issue resolution.<a href="#section-5-3.4.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-5-4">It should be noted that the SLA assurance capabilities supported by Issue Servers may vary across implementations and products. Therefore, an Issue Server <span class="bcp14">SHOULD</span> provide interfaces that expose its supported capabilities and enable external systems to query such capability information.<a href="#section-5-4" class="pilcrow">¶</a></p>
+<p id="section-5-5">To support optical networks SLA assurance management, a unified data model is required for standardized representation. The model should support classification (issue-sla-type) and hierarchical layering (layer), where the layering follows the network architecture defined in <span>[<a href="#ITU-T_G.709" class="cite xref">ITU-T_G.709</a>]</span>.<a href="#section-5-5" class="pilcrow">¶</a></p>
+<p id="section-5-6">Specifically, the optical layer includes OTS, OMS, and OCh, while the electrical layer includes OTUk and ODUk (including both higher-order and lower-order ODUk). The model should also incorporate severity labeling (severity), explicit identification of affected objects (source-objects), impacted services or objects (impacted-objects), and temporal tracking attributes such as occurrence time (occur-time) and clearance time (clear-time). In addition, each impairment instance should include a detailed description (description) and corresponding remediation or handling recommendations (suggestion), enabling consistent lifecycle tracking, analysis, and operational decision-making.<a href="#section-5-6" class="pilcrow">¶</a></p>
+<div id="interworking-with-sain">
+<section id="section-5.1">
+        <h3 id="name-interworking-with-sain">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-interworking-with-sain" class="section-name selfRef">Interworking with SAIN</a>
+        </h3>
+<span id="name-interworking-with-sain-2"></span><div id="fig-sain">
+<figure id="figure-2">
+          <div class="alignLeft art-ascii-art art-text artwork" id="section-5.1-1.1">
+<pre>
+    +-------------------------+
+    | Assurance Issue Handler |
+    +-------------------------+
+                 ^
+                 | issue
+                 |
+    +-------------------------+
+    | Assurance Issue Process |
+    +-------------------------+
+      ^                     ^
+      |                     | symptoms
+      | Asymptomatic        |
+      | network      +------+--+
+      | metrics      |  SAIN   |
+      |              +------+--+
+      |                     ^
+      |                     | Service
+      |                     | metrics
+    +-+---------------------+--+
+    |    Network in the        |
+    |   Autonomous Domain      |
+    +--------------------------+
+</pre>
+</div>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-interworking-with-sain-2" class="selfRef">Interworking with SAIN</a>
+          </figcaption></figure>
+</div>
+<p id="section-5.1-2">SAIN <span>[<a href="#RFC9417" class="cite xref">RFC9417</a>]</span> defines an architecture for network service assurance and specifies mechanisms for detecting symptoms associated with service degradation. For symptomatic issues, issue lifecycle management can leverage the capabilities provided by SAIN to support issue detection, analysis, and handling. However, SAIN does not address asymptomatic issues, since such issues do not manifest as observable service-level symptoms. Therefore, the management of asymptomatic issues requires issue lifecycle management functions to interact directly with the underlying physical network resources and associated monitoring mechanisms.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="relationship-with-incident">
+<section id="section-5.2">
+        <h3 id="name-relationship-with-incident">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-relationship-with-incident" class="section-name selfRef">Relationship with Incident</a>
+        </h3>
+<p id="section-5.2-1">The objective of SLA assurance issue management is to prevent incidents, or reduce their occurrence, by identifying and resolving issues before they escalate into incidents. However, incidents cannot be fully prevented by issue management for several reasons. First, certain SLA terms permit temporary service outages or transient service interruptions, in which case issue handling is typically delegated to incident management. Second, an Issue Server may have limited SLA assurance capabilities, which may prevent it from detecting certain classes of issues. Therefore, issue management and incident management are complementary functions.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="interworking-with-actn-framework">
+<section id="section-5.3">
+        <h3 id="name-interworking-with-actn-fram">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-interworking-with-actn-fram" class="section-name selfRef">Interworking with ACTN framework</a>
+        </h3>
+<p id="section-5.3-1">The issue lifecycle management framework can interwork with the Abstraction and Control of Traffic Engineered Networks (ACTN) framework to support end-to-end service assurance across multi-domain transport networks. In particular, ACTN provides a hierarchical control architecture that enables coordination between customer-facing service requests and underlying network resources, while issue lifecycle management provides mechanisms for detecting, classifying, and handling SLA assurance issues.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.3-2">In an integrated deployment, the Issue Server may be instantiated within or alongside ACTN controllers in each domain, enabling correlation of service-level issues with underlying network conditions across multiple technology layers and administrative domains. ACTN’s provision of abstracted network views can be leveraged by issue management functions to localize the impact of detected issues and to facilitate cross-domain impact analysis.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
+<p id="section-5.3-3">Furthermore, issue-related information, including detected issues, their classifications, and resolution recommendations, may be exposed through ACTN interfaces to support coordinated remediation actions. Conversely, ACTN control and orchestration functions may provide topology, connectivity, and service intent information that enhances issue detection accuracy and improves root cause localization.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="sla-assurance-data-model-design">
+<section id="section-6">
+      <h2 id="name-sla-assurance-data-model-de">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-sla-assurance-data-model-de" class="section-name selfRef">SLA Assurance Data Model Design</a>
+      </h2>
+<div id="overview">
+<section id="section-6.1">
+        <h3 id="name-overview">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-overview" class="section-name selfRef">Overview</a>
+        </h3>
+<p id="section-6.1-1">The YANG module "ietf-optical-sla-assurance" defines a data model for SLA assurance management in optical transport networks. The module provides a standard way to define, detect, and report issues that may impact service and network availability. It enables consistent modeling of assurance intent, impairment detection, and risk reporting across optical transport domains. The information reported in the SLA assurance issue includes issue identification, classification, severity, impacted objects, and remediation suggestions.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.1-2">At the top of "ietf-optical-sla-assurance " module is the SLA Assurance container. The SLA assurance issues are represented as a list and indexed by "csn" (Customer Serial Number). Each SLA assurance issue is associated with issue metadata such as issue name, type, category, layer, severity, and timing information. In addition, the module supports relationships between issues through related-issues list and identifies source objects where the issue occurs. The module also defines impacted objects (services and tunnels) that are affected by each issue.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-ascii-art art-text artwork" id="section-6.1-3">
+<pre>
+   module: ietf-optical-sla-assurance
+   +--rw sla
+      +--rw issues* [csn]
+         +--rw csn                 uint64
+         +--rw issue-id?           int64
+         +--rw issue-name?         string
+         +--rw issue-sla-type?     enumeration
+         +--rw layer?              enumeration
+         +--rw issue-category?     enumeration
+         +--rw occur-time?         yang:date-and-time
+         +--rw clear-time?         yang:date-and-time
+         +--rw description?        string
+         +--rw suggestion?         string
+         +--rw severity?           enumeration
+         +--rw related-issues* [csn]
+         |  +--rw csn    uint64
+         +--rw source-objects* [object-id]
+         |  +--rw object-name?   string
+         |  +--rw object-id      yang:uuid
+         |  +--rw object-type?   string
+         +--rw issue-type?         enumeration
+         +--rw impacted-objects* [service-name tunnel-name]
+            +--rw service-name    yang:uuid
+            +--rw tunnel-name     yang:uuid
+</pre><a href="#section-6.1-3" class="pilcrow">¶</a>
+</div>
+<p id="section-6.1-4">The issue-sla-type enumeration classifies issues into three categories based on their impact: bandwidth, availability, and delay. The layer enumeration identifies the transport layer where the issue originates, including service-layer, electrical-layer (OTN/ODU), optical-layer (DWDM/OCh), and fiber-layer. The issue-category distinguishes between fault conditions (actual failures) and risk conditions (potential failures that may lead to SLA violations).<a href="#section-6.1-4" class="pilcrow">¶</a></p>
+<p id="section-6.1-5">The severity enumeration provides four levels: critical, major, minor, and info, allowing operators to prioritize issue resolution. The related-issues list establishes relationships between issues, enabling correlation analysis and root cause identification. The source-objects list identifies the specific network resources where the issue manifests, with each object identified by UUID and described by name and type.<a href="#section-6.1-5" class="pilcrow">¶</a></p>
+<p id="section-6.1-6">The module also defines an RPC operation "query-history-issue-statistics-by-service" that allows retrieval of historical SLA issue statistics for specific services or tunnels within a specified time range. The RPC accepts service identifiers (UUIDs), time range parameters, and an optional SFTP URL for exporting results. The output provides comprehensive statistics including interruption count, total interruption duration, availability percentage, and a detailed interrupt history with begin/end times and durations.<a href="#section-6.1-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-ascii-art art-text artwork" id="section-6.1-7">
+<pre>
+rpcs:
+   +---x query-history-issue-statistics-by-service
+      +---w input
+      |  +---w service-name?   yang:uuid
+      |  +---w tunnel-name?    yang:uuid
+      |  +---w begin-time?     date-and-time-s
+      |  +---w end-time?       date-and-time-s
+      |  +---w sftp-url?       string
+      +--ro output
+         +--ro sla-issue-statistic* [service-name tunnel-name]
+            +--ro service-name    yang:uuid
+            +--ro tunnel-name     yang:uuid
+            +--ro service-pm
+               +--ro interruptions?        uint64
+               +--ro interrupt-duration?   uint64
+               +--ro availability?         decimal64
+               +--ro interrupt-history* [interrupt-begin-time interrupt-end-time]
+                  +--ro interrupt-begin-time    yang:date-and-time
+                  +--ro interrupt-end-time      yang:date-and-time
+                  +--ro interrupt-duration?     uint64
+</pre><a href="#section-6.1-7" class="pilcrow">¶</a>
+</div>
+<p id="section-6.1-8">The model is designed to support closed-loop operations for SLA assurance in optical transport networks. It enables automated monitoring systems to detect issues, classify them according to SLA impact, and initiate appropriate remediation actions. The separation between symptomatic issues (actual service degradation) and asymptomatic issues (risk conditions that may lead to future SLA violations) allows for proactive assurance management, helping to prevent incidents before they occur.<a href="#section-6.1-8" class="pilcrow">¶</a></p>
+<p id="section-6.1-9">The module follows YANG 1.1 specification and imports standard YANG types from ietf-yang-types. It defines custom groupings for reusable issue attributes (issue-base) and complete issue definitions (issue), promoting modularity and consistency across different implementations. The use of UUID for service and tunnel identifiers ensures global uniqueness and facilitates integration with other management systems.<a href="#section-6.1-9" class="pilcrow">¶</a></p>
+<p id="section-6.1-10">This data model is intended to be used by network management systems, orchestration platforms, and assurance analytics engines in optical transport network environments. It provides a standardized representation of SLA assurance issues that can be exchanged between different vendor equipment and management systems, enabling multi-vendor interoperability and consistent SLA management across heterogeneous optical transport networks.<a href="#section-6.1-10" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sla-assurance-issue-identification-and-observability">
+<section id="section-6.2">
+        <h3 id="name-sla-assurance-issue-identif">
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-sla-assurance-issue-identif" class="section-name selfRef">SLA assurance issue identification and observability</a>
+        </h3>
+<p id="section-6.2-1">SLA assurance issue identification is the process of detecting and categorizing network conditions that may impact service performance, availability, or reliability. The YANG model provides a structured framework for representing identified issues with comprehensive observability attributes that enable effective monitoring, analysis, and remediation.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.2-2">Each SLA assurance issue is uniquely identified by a Customer Serial Number (CSN), which serves as the primary key in the issues list. The CSN is a 64-bit unsigned integer that provides a globally unique identifier for each issue within a management domain. In addition to the CSN, issues may optionally include an issue-id (64-bit signed integer) for legacy compatibility or cross-system referencing, and a human-readable issue-name (string up to 1000 characters) for operator identification and documentation.<a href="#section-6.2-2" class="pilcrow">¶</a></p>
+<p id="section-6.2-3">Observability of issues is enhanced through temporal and descriptive attributes. The occur-time attribute records when the issue was first detected or identified, using the yang:date-and-time type for precise timestamping. The clear-time attribute records when the issue was resolved or cleared, enabling calculation of issue duration and trend analysis. For issues that represent persistent conditions rather than events, the clear-time may be unset until resolution.<a href="#section-6.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sla-assurance-issue-resolution-and-capability-list">
+<section id="section-6.3">
+        <h3 id="name-sla-assurance-issue-resolut">
+<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-sla-assurance-issue-resolut" class="section-name selfRef">SLA assurance issue resolution and capability list</a>
+        </h3>
+<p id="section-6.3-1">SLA assurance issue resolution encompasses the processes and capabilities for addressing identified issues, ranging from immediate remediation actions to long-term capacity planning and network optimization. The YANG model provides the data foundation for representing issues throughout their lifecycle and enables the definition of standardized resolution capabilities and procedures.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
+<p id="section-6.3-2">Issue resolution typically follows a structured workflow: detection, classification, prioritization, diagnosis, remediation, and verification. The YANG model supports this workflow through comprehensive issue representation and temporal tracking. The occur-time and clear-time attributes enable measurement of issue duration and resolution time, while the severity attribute drives prioritization. The description and suggestion attributes provide contextual information and remediation guidance for both human operators and automated systems.<a href="#section-6.3-2" class="pilcrow">¶</a></p>
+<p id="section-6.3-3">The SLA assurance capability list represents the set of issue types that a management system can detect, analyze, and resolve. This capability is measured by the comprehensiveness of the issue catalog and the effectiveness of the resolution mechanisms. The YANG model's issue-sla-type and issue-category enumerations provide the framework for organizing this capability list, which can be extended with specific issue instances through the issue-name and description attributes.<a href="#section-6.3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="sla-assurance-yang-module">
+<section id="section-7">
+      <h2 id="name-sla-assurance-yang-module">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-sla-assurance-yang-module" class="section-name selfRef">SLA Assurance YANG module</a>
+      </h2>
+<div class="breakable lang-yang sourcecode" id="section-7-1">
+<pre>&lt;CODE BEGINS&gt; file "ietf-optical-sla-assurance@2026-07-02.yang"
+
+module ietf-optical-sla-assurance  {
+  yang-version 1.1;
+  namespace "urn:ietf:params:xml:ns:yang:ietf-optical-sla-assurance";
+  prefix hnts;
+
+  import ietf-yang-types {
+    prefix yang;
+    reference
+      "RFC6991: Common YANG Data Types.";
+  }
+  organization
+    "IETF CCAMP Working Group";
+
+  contact
+    "TODO";
+
+  description
+    "This module defines the interfaces for the SLA assurance management of optical networks";
+
+  revision 2026-07-02 {
+    description
+      "Initial revision.";
+    reference
+      "A YANG Data Model for SLA.";
+  }
+
+  grouping issue-base {
+    leaf issue-id {
+      type int64 {
+        range "0..1000000000";
+    }
+      description
+        "issue id";
+    }
+    leaf issue-name {
+      type string {
+        length "0..1000";
+      }
+      description
+        "issue name";
+    }
+    leaf issue-sla-type {
+      type enumeration {
+        enum bandwidth {
+      value 1;
+      description
+            "bandwidth";
+        }
+        enum availability {
+      value 2;
+      description
+            "availability";
+        }
+        enum delay {
+      value 3;
+      description
+            "delay";
+        }
+      }
+      description
+        "issue type";
+    }
+
+    leaf layer {
+    type enumeration {
+        enum service-layer {
+      value 1;
+      description
+            "service-layer";
+        }
+        enum electrical-layer {
+      value 2;
+      description
+            "electrical-layer";
+        }
+        enum optical-layer {
+      value 3;
+      description
+            "optical-layer";
+        }
+        enum fiber-layer {
+      value 4;
+      description
+            "fiber-layer";
+        }
+      }
+      description
+        "issue layer";
+    }
+    description
+       "issue base";
+  }
+
+  grouping issue {
+    leaf csn {
+      type uint64 {
+          range "0..9223372036854775807";
+      }
+      mandatory true;
+      description
+        "serial number of the issue";
+    }
+    uses issue-base;
+
+    leaf issue-category {
+      type enumeration {
+        enum fault {
+      value 1;
+      description
+            "fault";
+        }
+        enum risk {
+      value 2;
+      description
+            "risk";
+        }
+      }
+      description
+        "type of an issue";
+    }
+
+    leaf occur-time {
+      type yang:date-and-time;
+      description
+        "occur time of the issue";
+    }
+
+    leaf clear-time {
+      type yang:date-and-time;
+      description
+        "clear time of the issue";
+    }
+
+    leaf description {
+      type string {
+        length "0..1000";
+      }
+      description
+        "description of the issue";
+    }
+
+    leaf suggestion {
+      type string{
+        length "0..1000";
+      }
+      description
+        "suggestion on handling the issue";
+    }
+    leaf severity {
+      type enumeration {
+        enum critical {
+      value 1;
+      description
+            "critical";
+        }
+        enum major {
+      value 2;
+      description
+            "major";
+        }
+        enum minor {
+      value 3;
+      description
+            "minor";
+        }
+        enum info {
+      value 4;
+      description
+            "info";
+        }
+      }
+      description
+        "severity of the issue";
+    }
+
+    list related-issues {
+    key "csn";
+      leaf csn {
+        type uint64 {
+          range "0..9223372036854775807";
+        }
+        description
+          "serial number of the issue";
+        }
+      description
+        "related issues of the issue";
+    }
+
+
+    list source-objects {
+      key "object-id";
+      leaf object-name {
+        type string {
+          length "0..255";
+        }
+        description
+          "resource name of the resource where the issue occurs";
+      }
+      leaf object-id {
+        type yang:uuid;
+        description
+          "uuid of the resource where the issue occurs";
+      }
+      leaf object-type {
+        type string{
+          length "0..64";
+        }
+        description
+          "resource type of the resource where the issue occurs";
+      }
+        description
+          "the resource where the issue occurs";
+    }
+    description
+      "issue of the resource";
+  }
+
+  grouping service-info {
+    leaf service-name {
+      type yang:uuid;
+      description
+        "service name of the issue";
+    }
+    leaf tunnel-name {
+      type yang:uuid;
+      description
+        "tunnel name of the issue";
+    }
+    description
+      "to be added";
+  }
+
+  container sla {
+    description
+      "The container for the sla";
+
+    list issues {
+        key "csn";
+        uses issue;
+        leaf issue-type {
+          type enumeration {
+            enum current {
+          value 1;
+              description
+                "current issue";
+            }
+            enum history {
+          value 2;
+              description
+                "history issue";
+            }
+          }
+          description
+            "To be add";
+        }
+        list impacted-objects {
+          key "service-name tunnel-name";
+          uses service-info;
+          description
+            "impacted object of the issue";
+        }
+        description
+          "issue list";
+    }
+  }
+
+  typedef date-and-time-s {
+    type string {
+      pattern '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[\+\-]\d{2}:\d{2})';
+    }
+    description
+      "time, accurate to s";
+  }
+
+  rpc query-history-issue-statistics-by-service {
+  description
+      "issue RPC inteface";
+    input {
+      uses service-info;
+      leaf begin-time {
+        type date-and-time-s;
+        description
+          "begin time of the issue statistics";
+      }
+      leaf end-time {
+        type date-and-time-s;
+        description
+          "end time of the issue statistics";
+      }
+      leaf sftp-url {
+        type string {
+          length "0..255";
+        }
+        description
+          "sftp url";
+      }
+    }
+
+    output {
+      list sla-issue-statistic {
+        key "service-name tunnel-name";
+        uses service-info;
+
+        container service-pm {
+          leaf interruptions {
+            type uint64 {
+              range "0..9223372036854775807";
+            }
+            description
+              "interruptions";
+          }
+          leaf interrupt-duration {
+      type uint64 {
+              range "0..9223372036854775807";
+            }
+            description
+              "interrupt duration";
+          }
+          leaf availability {
+            type decimal64 {
+              fraction-digits "2";
+            }
+            description
+              "availability";
+          }
+          list interrupt-history {
+            key "interrupt-begin-time interrupt-end-time";
+            leaf interrupt-begin-time {
+              type yang:date-and-time;
+              description
+                "interrupt begin time";
+            }
+            leaf interrupt-end-time {
+              type yang:date-and-time;
+              description
+                "interrupt end time";
+            }
+            leaf interrupt-duration {
+              type uint64 {
+                range "0..9223372036854775807";
+              }
+              description
+                "interrupt duration";
+            }
+            description
+              "interrupt history";
+          }
+          description
+            "service pm data";
+        }
+        description
+          "output of the history statistics";
+      }
+    }
+  }
+}
+
+&lt;CODE ENDS&gt;</pre><a href="#section-7-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="security-considerations">
+<section id="section-8">
+      <h2 id="name-security-considerations">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-8-1">The YANG module specified in this document defines a data model for SLA assurance management in optical transport networks. The module is designed to be accessed via YANG-based management protocols, such as NETCONF <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span> and RESTCONF <span>[<a href="#RFC8040" class="cite xref">RFC8040</a>]</span>. These YANG-based management protocols (1) have to use a secure transport layer (e.g., SSH <span>[<a href="#RFC4252" class="cite xref">RFC4252</a>]</span>, TLS <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>, and QUIC <span>[<a href="#RFC9000" class="cite xref">RFC9000</a>]</span>) and (2) have to use mutual authentication.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">The Network Configuration Access Control Model (NACM) <span>[<a href="#RFC8341" class="cite xref">RFC8341</a>]</span> provides the means to restrict access for particular NETCONF or RESTCONF users to a preconfigured subset of all available NETCONF or RESTCONF protocol operations and content.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<p id="section-8-3">Some of the readable data nodes in this YANG module may be considered sensitive or vulnerable in some network environments. It is thus important to control read access (e.g., via get, get-config, or notification) to these data nodes. These are the subtrees and data nodes and their sensitivity/vulnerability:<a href="#section-8-3" class="pilcrow">¶</a></p>
+<p id="section-8-4">'/sla/issues': This list specifies the SLA assurance issue entries for optical transport networks. Unauthorized read access of this list can allow intruders to access SLA assurance information and potentially get a picture of the health and resilience status of the optical transport network. Intruders may exploit the vulnerabilities revealed in the issue data, including source-objects and impacted-objects, to lead to further negative impact on the network. Care must be taken to ensure that this list is accessed only by authorized users.<a href="#section-8-4" class="pilcrow">¶</a></p>
+<p id="section-8-5">Some of the RPC operations in this YANG module may be considered sensitive or vulnerable in some network environments. It is thus important to control access to these operations. These are the operations and their sensitivity/vulnerability:<a href="#section-8-5" class="pilcrow">¶</a></p>
+<p id="section-8-6">"query-history-issue-statistics-by-service": This RPC operation retrieves historical SLA issue statistics and service performance metrics. If a malicious or buggy client performs an unexpectedly large number of this operation, the result might be an excessive use of system resources on the server side as well as network resources. Servers <span class="bcp14">MUST</span> ensure they have sufficient resources to fulfill this request; otherwise, they <span class="bcp14">MUST</span> reject the request using appropriate RPC error responses. Additionally, the sftp-url parameter provided in this operation <span class="bcp14">MUST</span> be validated against authorized destinations to prevent unauthorized data exfiltration.<a href="#section-8-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="iana-considerations">
+<section id="section-9">
+      <h2 id="name-iana-considerations">
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<div id="the-ietf-xml-registry">
+<section id="section-9.1">
+        <h3 id="name-the-ietf-xml-registry">
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-the-ietf-xml-registry" class="section-name selfRef">The "IETF XML" Registry</a>
+        </h3>
+<p id="section-9.1-1">IANA is requested to register the following URI in the "ns" registry within the "IETF XML Registry" group <span>[<a href="#RFC3688" class="cite xref">RFC3688</a>]</span>:<a href="#section-9.1-1" class="pilcrow">¶</a></p>
+<p id="section-9.1-2">URI: urn:ietf:params:xml:ns:yang:hnts<a href="#section-9.1-2" class="pilcrow">¶</a></p>
+<p id="section-9.1-3">Registrant Contact: The IESG.<a href="#section-9.1-3" class="pilcrow">¶</a></p>
+<p id="section-9.1-4">XML: N/A, the requested URIs are XML namespaces.<a href="#section-9.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="the-yang-module-names-registry">
+<section id="section-9.2">
+        <h3 id="name-the-yang-module-names-regis">
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-the-yang-module-names-regis" class="section-name selfRef">The "YANG Module Names" Registry</a>
+        </h3>
+<p id="section-9.2-1">IANA is requested to register the following YANG module in the "YANG Module Names" registry <span>[<a href="#RFC6020" class="cite xref">RFC6020</a>]</span> within the "YANG Parameters" registry group.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
+<p id="section-9.2-2">Name: ietf-optical-sla-assurance<a href="#section-9.2-2" class="pilcrow">¶</a></p>
+<p id="section-9.2-3">Maintained by IANA?  N<a href="#section-9.2-3" class="pilcrow">¶</a></p>
+<p id="section-9.2-4">Namespace: urn:ietf:params:xml:ns:yang:ietf-optical-sla-assurance<a href="#section-9.2-4" class="pilcrow">¶</a></p>
+<p id="section-9.2-5">Prefix: ietf-optical-sla-assurance<a href="#section-9.2-5" class="pilcrow">¶</a></p>
+<p id="section-9.2-6">Reference:  RFC XXXX<a href="#section-9.2-6" class="pilcrow">¶</a></p>
+<p id="section-9.2-7">// RFC Ed.: replace XXXX and remove this comment<a href="#section-9.2-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-combined-references">
+<section id="section-10">
+      <h2 id="name-references">
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<div id="sec-normative-references">
+<section id="section-10.1">
+        <h3 id="name-normative-references">
+<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="I-D.ietf-nmop-network-incident-yang">[I-D.ietf-nmop-network-incident-yang]</dt>
+        <dd>
+<span class="refAuthor">Hu, T.</span>, <span class="refAuthor">Contreras, L. M.</span>, <span class="refAuthor">Wu, Q.</span>, <span class="refAuthor">Davis, N.</span>, and <span class="refAuthor">C. Feng</span>, <span class="refTitle">"A YANG Data Model for Network Incident Management"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-nmop-network-incident-yang-10</span>, <time datetime="2026-07-05" class="refDate">5 July 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-nmop-network-incident-yang-10">https://datatracker.ietf.org/doc/html/draft-ietf-nmop-network-incident-yang-10</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-nmop-terminology">[I-D.ietf-nmop-terminology]</dt>
+        <dd>
+<span class="refAuthor">Davis, N.</span>, <span class="refAuthor">Farrel, A.</span>, <span class="refAuthor">Graf, T.</span>, <span class="refAuthor">Wu, Q.</span>, and <span class="refAuthor">C. Yu</span>, <span class="refTitle">"Some Key Terms for Network Fault and Problem Management"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-nmop-terminology-23</span>, <time datetime="2025-08-18" class="refDate">18 August 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-nmop-terminology-23">https://datatracker.ietf.org/doc/html/draft-ietf-nmop-terminology-23</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="ITU-T_G.709">[ITU-T_G.709]</dt>
+        <dd>
+<span class="refAuthor">International Telecommunication Union</span>, <span class="refTitle">"Interfaces for the optical transport network"</span>, <span class="seriesInfo">ITU-T G.709/Y.1331 (2020)</span>, <time datetime="2020-06" class="refDate">June 2020</time>, <span>&lt;<a href="&lt;https://www.itu.int/rec/T-REC-G.709&gt;">&lt;https://www.itu.int/rec/T-REC-G.709&gt;</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC3688">[RFC3688]</dt>
+        <dd>
+<span class="refAuthor">Mealling, M.</span>, <span class="refTitle">"The IETF XML Registry"</span>, <span class="seriesInfo">BCP 81</span>, <span class="seriesInfo">RFC 3688</span>, <span class="seriesInfo">DOI 10.17487/RFC3688</span>, <time datetime="2004-01" class="refDate">January 2004</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3688">https://www.rfc-editor.org/rfc/rfc3688</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC4252">[RFC4252]</dt>
+        <dd>
+<span class="refAuthor">Ylonen, T.</span> and <span class="refAuthor">C. Lonvick, Ed.</span>, <span class="refTitle">"The Secure Shell (SSH) Authentication Protocol"</span>, <span class="seriesInfo">RFC 4252</span>, <span class="seriesInfo">DOI 10.17487/RFC4252</span>, <time datetime="2006-01" class="refDate">January 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4252">https://www.rfc-editor.org/rfc/rfc4252</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6020">[RFC6020]</dt>
+        <dd>
+<span class="refAuthor">Bjorklund, M., Ed.</span>, <span class="refTitle">"YANG - A Data Modeling Language for the Network Configuration Protocol (NETCONF)"</span>, <span class="seriesInfo">RFC 6020</span>, <span class="seriesInfo">DOI 10.17487/RFC6020</span>, <time datetime="2010-10" class="refDate">October 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6020">https://www.rfc-editor.org/rfc/rfc6020</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6241">[RFC6241]</dt>
+        <dd>
+<span class="refAuthor">Enns, R., Ed.</span>, <span class="refAuthor">Bjorklund, M., Ed.</span>, <span class="refAuthor">Schoenwaelder, J., Ed.</span>, and <span class="refAuthor">A. Bierman, Ed.</span>, <span class="refTitle">"Network Configuration Protocol (NETCONF)"</span>, <span class="seriesInfo">RFC 6241</span>, <span class="seriesInfo">DOI 10.17487/RFC6241</span>, <time datetime="2011-06" class="refDate">June 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6241">https://www.rfc-editor.org/rfc/rfc6241</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8040">[RFC8040]</dt>
+        <dd>
+<span class="refAuthor">Bierman, A.</span>, <span class="refAuthor">Bjorklund, M.</span>, and <span class="refAuthor">K. Watsen</span>, <span class="refTitle">"RESTCONF Protocol"</span>, <span class="seriesInfo">RFC 8040</span>, <span class="seriesInfo">DOI 10.17487/RFC8040</span>, <time datetime="2017-01" class="refDate">January 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8040">https://www.rfc-editor.org/rfc/rfc8040</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+        <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8341">[RFC8341]</dt>
+        <dd>
+<span class="refAuthor">Bierman, A.</span> and <span class="refAuthor">M. Bjorklund</span>, <span class="refTitle">"Network Configuration Access Control Model"</span>, <span class="seriesInfo">STD 91</span>, <span class="seriesInfo">RFC 8341</span>, <span class="seriesInfo">DOI 10.17487/RFC8341</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8341">https://www.rfc-editor.org/rfc/rfc8341</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8446">[RFC8446]</dt>
+        <dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 8446</span>, <span class="seriesInfo">DOI 10.17487/RFC8446</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8446">https://www.rfc-editor.org/rfc/rfc8446</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8632">[RFC8632]</dt>
+        <dd>
+<span class="refAuthor">Vallin, S.</span> and <span class="refAuthor">M. Bjorklund</span>, <span class="refTitle">"A YANG Data Model for Alarm Management"</span>, <span class="seriesInfo">RFC 8632</span>, <span class="seriesInfo">DOI 10.17487/RFC8632</span>, <time datetime="2019-09" class="refDate">September 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8632">https://www.rfc-editor.org/rfc/rfc8632</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9000">[RFC9000]</dt>
+        <dd>
+<span class="refAuthor">Iyengar, J., Ed.</span> and <span class="refAuthor">M. Thomson, Ed.</span>, <span class="refTitle">"QUIC: A UDP-Based Multiplexed and Secure Transport"</span>, <span class="seriesInfo">RFC 9000</span>, <span class="seriesInfo">DOI 10.17487/RFC9000</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9000">https://www.rfc-editor.org/rfc/rfc9000</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9418">[RFC9418]</dt>
+        <dd>
+<span class="refAuthor">Claise, B.</span>, <span class="refAuthor">Quilbeuf, J.</span>, <span class="refAuthor">Lucente, P.</span>, <span class="refAuthor">Fasano, P.</span>, and <span class="refAuthor">T. Arumugam</span>, <span class="refTitle">"A YANG Data Model for Service Assurance"</span>, <span class="seriesInfo">RFC 9418</span>, <span class="seriesInfo">DOI 10.17487/RFC9418</span>, <time datetime="2023-07" class="refDate">July 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9418">https://www.rfc-editor.org/rfc/rfc9418</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9543">[RFC9543]</dt>
+      <dd>
+<span class="refAuthor">Farrel, A., Ed.</span>, <span class="refAuthor">Drake, J., Ed.</span>, <span class="refAuthor">Rokui, R.</span>, <span class="refAuthor">Homma, S.</span>, <span class="refAuthor">Makhijani, K.</span>, <span class="refAuthor">Contreras, L.</span>, and <span class="refAuthor">J. Tantsura</span>, <span class="refTitle">"A Framework for Network Slices in Networks Built from IETF Technologies"</span>, <span class="seriesInfo">RFC 9543</span>, <span class="seriesInfo">DOI 10.17487/RFC9543</span>, <time datetime="2024-03" class="refDate">March 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9543">https://www.rfc-editor.org/rfc/rfc9543</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-10.2">
+        <h3 id="name-informative-references">
+<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="RFC8969">[RFC8969]</dt>
+        <dd>
+<span class="refAuthor">Wu, Q., Ed.</span>, <span class="refAuthor">Boucadair, M., Ed.</span>, <span class="refAuthor">Lopez, D.</span>, <span class="refAuthor">Xie, C.</span>, and <span class="refAuthor">L. Geng</span>, <span class="refTitle">"A Framework for Automating Service and Network Management with YANG"</span>, <span class="seriesInfo">RFC 8969</span>, <span class="seriesInfo">DOI 10.17487/RFC8969</span>, <time datetime="2021-01" class="refDate">January 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8969">https://www.rfc-editor.org/rfc/rfc8969</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9417">[RFC9417]</dt>
+      <dd>
+<span class="refAuthor">Claise, B.</span>, <span class="refAuthor">Quilbeuf, J.</span>, <span class="refAuthor">Lopez, D.</span>, <span class="refAuthor">Voyer, D.</span>, and <span class="refAuthor">T. Arumugam</span>, <span class="refTitle">"Service Assurance for Intent-Based Networking Architecture"</span>, <span class="seriesInfo">RFC 9417</span>, <span class="seriesInfo">DOI 10.17487/RFC9417</span>, <time datetime="2023-07" class="refDate">July 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9417">https://www.rfc-editor.org/rfc/rfc9417</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+</div>
+<div id="acknowledgments">
+<section id="appendix-A">
+      <h2 id="name-acknowledgments">
+<a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+      </h2>
+<p id="appendix-A-1">The authors would like to thank Yanlei Zheng, Italo Busi for their valuable comments and great input to this work.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-B">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Henry Yu</span></div>
+<div dir="auto" class="left"><span class="org">Huawei</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:hyu2010b@gmail.com" class="email">hyu2010b@gmail.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Xiao Li</span></div>
+<div dir="auto" class="left"><span class="org">Huawei</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:lixiao33@huawei.com" class="email">lixiao33@huawei.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Yanxia Tan</span></div>
+<div dir="auto" class="left"><span class="org">China Unicom</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:tanyx11@chinaunicom.cn" class="email">tanyx11@chinaunicom.cn</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Xing Zhao</span></div>
+<div dir="auto" class="left"><span class="org">CAICT</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:zhaoxing@caict.ac.cn" class="email">zhaoxing@caict.ac.cn</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
