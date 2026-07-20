@@ -71,13 +71,17 @@ maintain high service reliability and SLA compliance
 
 # Introduction
 
-Service Level Agreement (SLA) assurance management in optical transport networks concerns the continuous monitoring, analysis, and management of network conditions that may impact the performance, availability, and reliability of services. Its objective is to detect potential issues proactively, diagnose their root causes, and initiate corrective actions to prevent SLA violations. Several standards already exist in this area. SAIN {{?RFC9417}} and {{!RFC9418}} defines an architecture and a YANG model for network service assurance, respectively. {{!I-D.ietf-nmop-network-incident-yang] defines a YANG model for the network incident lifecycle management. It aims to provide a standard way to report, diagnose, and help resolve network incidents which may cause SLA violations.
-
-However, several gaps remain in the existing standards and their associated YANG models with respect to supporting SLA assurance management in optical transport networks. First, the SAIN framework focuses on the detection and resolution of symptoms, that is, conditions indicating that a service instance or subservice is not operating in a fully healthy state. In optical transport networks, however, undesirable network conditions may exist that increase the risk of SLA violations while remaining asymptomatic. For example, multiple service paths may traverse fiber links deployed within the same trench, thereby introducing a common point of failure. Such conditions do not necessarily result in observable service degradation and, therefore, may not be identified through symptom-based monitoring mechanisms.
-
 Service Level Agreement (SLA) assurance management in optical transport networks concerns the continuous monitoring, analysis, and management of network conditions that may impact the performance, availability, and reliability of services. Its objective is to detect potential issues proactively, diagnose their root causes, and initiate corrective actions to prevent SLA violations. Several standards already exist in this area. SAIN {{?RFC9417}} and {{!RFC9418}} defines an architecture and a YANG model for network service assurance, respectively. {{!I-D.ietf-nmop-network-incident-yang}} defines a YANG model for the network incident lifecycle management. It aims to provide a standard way to report, diagnose, and help resolve network incidents which may cause SLA violations.
 
 However, several gaps remain in the existing standards and their associated YANG models with respect to supporting SLA assurance management in optical transport networks. First, the SAIN framework focuses on the detection and resolution of symptoms, that is, conditions indicating that a service instance or subservice is not operating in a fully healthy state. In optical transport networks, however, undesirable network conditions may exist that increase the risk of SLA violations while remaining asymptomatic. For example, multiple service paths may traverse fiber links deployed within the same trench, thereby introducing a common point of failure. Such conditions do not necessarily result in observable service degradation and, therefore, may not be identified through symptom-based monitoring mechanisms.
+
+In addition, SLA assurance monitoring, in some cases, needs to detect and report events defined by SLA policies, such as bandwidth utilization exceeding a specified threshold. The threshold values are defined by the user, reflecting user’s perception of desired network conditions. The occurrence of such events does not necessarily indicate the presence of an incident affecting service health. Instead, event reporting may serve as a precautionary mechanism requested by the user. A mechanism and a YANG model are therefore needed to support the detection and reporting of such events.
+
+Thirdly, some optical network conditions, such as fiber attenuation, may degrade silently and gradually before resulting in observable incidents. These conditions may persist for an extended period of time. For SLA assurance management in optical networks, it is preferable to define, detect, and resolve such issues proactively rather than waiting for them to escalate into incidents.
+
+To address these optical network specific challenges, an issue-centric SLA assurance solution is specified. An issue is an optical network condition that, if unaddressed, may lead to SLA violations and incidents.
+
+This document defines a YANG data model for SLA assurance management in optical networks. The model defines optical network SLA assurance issues and their corresponding resolutions.
 
 # Conventions and Definitions
 
@@ -131,6 +135,7 @@ The objective is to ensure near-zero interrupted service delivery (surpassing th
 ## Deterministic Latency Assurance for Latency-Sensitive Services
 
 Deterministic SLA assurance in optical transport networks is a use case that aims to ensure stable and predictable service performance for latency-sensitive applications, such as AI distributed training, telemedicine, industrial automation, and immersive XR services. These applications require stringent guarantees on end-to-end latency, jitter, packet loss, bandwidth availability, and service continuity.
+
 In this use case, an optical transport service is provisioned with explicit SLA objectives that define the required deterministic performance characteristics. During service operation, the network continuously monitors both the service state and the underlying optical transport infrastructure through real-time telemetry collection. The monitored information may include end-to-end path latency, optical link quality, bandwidth utilization, wavelength continuity, congestion conditions, and other transport performance indicators relevant to SLA fulfillment.
 
 As network conditions dynamically evolve, the system identifies conditions that may threaten the SLA commitments of active services before visible service degradation occurs. Such conditions may include increasing congestion, abnormal latency variation, optical signal degradation, or predicted failures affecting the active transport path. The network then evaluates alternative optical transport paths and service optimization options capable of preserving the required SLA characteristics.
@@ -142,6 +147,7 @@ The objective of this use case is to maintain continuous SLA compliance througho
 Cloud–Network Synergy-Based Dynamic Bandwidth Allocation is a use case in optical transport networks that enables adaptive allocation of transport resources based on coordinated demands from cloud applications and network conditions. It targets service scenarios such as AI training workloads, distributed computing, cloud bursting, and large-scale data synchronization, where bandwidth demand is highly dynamic and time-varying.
 
 In this use case, cloud applications continuously generate workload signals that reflect their resource requirements, including bandwidth demand, traffic intensity, latency sensitivity, and service priority. These requirements are communicated to the optical transport network through a cloud–network interface. At the same time, the optical transport network maintains real-time visibility of available capacity, including wavelength availability, link utilization, path constraints, and operational state across the optical infrastructure.
+
 Based on the correlation between cloud-side demand signals and network-side resource state, the system determines when and where bandwidth adjustments are required. When increased demand is detected, the network evaluates feasible optical path and wavelength allocation options that satisfy service constraints. Conversely, when demand decreases, allocated resources may be released or re-optimized to improve overall network efficiency.
 
 The objective of this use case is to achieve efficient and elastic utilization of optical transport resources while ensuring that cloud application performance requirements are consistently met. By enabling coordinated decision-making between cloud workloads and optical network control, the system improves resource utilization, reduces congestion by dynamic bandwidth control of hard-pipes, and enhances the responsiveness of the transport network to dynamic application demands.
@@ -396,6 +402,7 @@ Specifically, the optical layer includes OTS, OMS, and OCh, while the electrical
     +-+---------------------+--+
     |    Network in the        |
     |   Autonomous Domain      |
+    +--------------------------+
 ~~~~
 {:#fig-sain title="Interworking with SAIN"}
 
@@ -525,18 +532,27 @@ Some of the RPC operations in this YANG module may be considered sensitive or vu
 ## The "IETF XML" Registry
 
 IANA is requested to register the following URI in the "ns" registry within the "IETF XML Registry" group {{!RFC3688}}:
+
 URI: urn:ietf:params:xml:ns:yang:hnts
+
 Registrant Contact: The IESG.
+
 XML: N/A, the requested URIs are XML namespaces.
 
 ## The "YANG Module Names" Registry
 
 IANA is requested to register the following YANG module in the "YANG Module Names" registry {{!RFC6020}} within the "YANG Parameters" registry group.
+
 Name: ietf-optical-sla-assurance
+
 Maintained by IANA?  N
+
 Namespace: urn:ietf:params:xml:ns:yang:ietf-optical-sla-assurance
+
 Prefix: ietf-optical-sla-assurance
+
 Reference:  RFC XXXX
+
 // RFC Ed.: replace XXXX and remove this comment
 
 --- back
