@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-19T03:35:16.950397+00:00",
+  "timestamp": "2026-07-21T03:29:16.596925+00:00",
   "repo": "hyu2010/sla_assurance_optical",
   "labels": [
     {
@@ -159,6 +159,34 @@
       "mergedBy": "hyu2010",
       "mergeCommit": {
         "oid": "332fe6efc5d5d38ed805608b86c4c5821b7ea4c0"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDOTI2JHs7z7Ecc",
+      "title": "copy/paste errors fix",
+      "url": "https://github.com/hyu2010/sla_assurance_optical/pull/5",
+      "state": "MERGED",
+      "author": "hyu2010",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-07-20T15:32:37Z",
+      "updatedAt": "2026-07-20T15:32:52Z",
+      "baseRepository": "hyu2010/sla_assurance_optical",
+      "baseRefName": "main",
+      "baseRefOid": "332fe6efc5d5d38ed805608b86c4c5821b7ea4c0",
+      "headRepository": "hyu2010/sla_assurance_optical",
+      "headRefName": "firstdraft",
+      "headRefOid": "2bf3de749cd278b71c5b4d16df4e177989dce429",
+      "closedAt": "2026-07-20T15:32:52Z",
+      "mergedAt": "2026-07-20T15:32:52Z",
+      "mergedBy": "hyu2010",
+      "mergeCommit": {
+        "oid": "3efac880173433db6ff9f084873da26264cfcc30"
       },
       "comments": [],
       "reviews": []
