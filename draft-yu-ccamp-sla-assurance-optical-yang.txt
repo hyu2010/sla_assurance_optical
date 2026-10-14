@@ -5,11 +5,11 @@
 Common Control and Measurement Plane                               H. Yu
 Internet-Draft                                                     X. Li
 Intended status: Standards Track                                  Huawei
-Expires: 21 January 2027                                          Y. Tan
+Expires: 17 April 2027                                            Y. Tan
                                                             China Unicom
                                                                  X. Zhao
                                                                    CAICT
-                                                            20 July 2026
+                                                         14 October 2026
 
 
 A YANG Data Model for Service Level Agreement (SLA) Assurance Management
@@ -60,7 +60,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 January 2027.
+   This Internet-Draft will expire on 17 April 2027.
 
 Copyright Notice
 
@@ -1627,9 +1627,9 @@ rpcs:
               Hu, T., Contreras, L. M., Wu, Q., Davis, N., and C. Feng,
               "A YANG Data Model for Network Incident Management", Work
               in Progress, Internet-Draft, draft-ietf-nmop-network-
-              incident-yang-10, 5 July 2026,
+              incident-yang-19, 7 October 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-nmop-
-              network-incident-yang-10>.
+              network-incident-yang-19>.
 
    [I-D.ietf-nmop-terminology]
               Davis, N., Farrel, A., Graf, T., Wu, Q., and C. Yu, "Some
