@@ -5,11 +5,13 @@
 Common Control and Measurement Plane                               H. Yu
 Internet-Draft                                                     X. Li
 Intended status: Standards Track                                  Huawei
-Expires: 17 April 2027                                            Y. Tan
+Expires: 18 April 2027                                            Y. Tan
                                                             China Unicom
                                                                  X. Zhao
                                                                    CAICT
-                                                         14 October 2026
+                                                                 D. King
+                                                      Old Dog Consulting
+                                                         15 October 2026
 
 
 A YANG Data Model for Service Level Agreement (SLA) Assurance Management
@@ -20,12 +22,12 @@ Abstract
 
    This document defines a YANG module for SLA assurance management in
    optical transport networks.  The module provides a standard way to
-   define, detect, and report issues that may impact service and network
-   availability.  It enables consistent modeling of assurance intent,
-   impairment detection, and risk reporting across optical transport
-   domains.  The YANG model is designed to support closed-loop
-   operations, allowing automated monitoring, analysis, and remediation
-   workflows to maintain high service reliability and SLA compliance
+   represent and report issues that may impact service and network
+   availability.  It enables consistent reporting of impairments and
+   risks across optical transport domains.  The YANG model is designed
+   to support closed-loop operations, allowing automated monitoring,
+   analysis, and remediation workflows to maintain high service
+   reliability and SLA compliance.
 
 About This Document
 
@@ -60,7 +62,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 April 2027.
+   This Internet-Draft will expire on 18 April 2027.
 
 Copyright Notice
 
@@ -104,7 +106,7 @@ Table of Contents
        4.2.7.  CPE access vulnerability/hazard
      4.3.  Latency issues
        4.3.1.  Operating latency exceeds allowed limit
-       4.3.2.  Protection switching latency exceeds allowed limit
+       4.3.2.  Protection-path latency exceeds allowed limit
    5.  SLA Assurance Issue Management Architecture and SLA Assurance
            Capability
      5.1.  Interworking with SAIN
@@ -114,6 +116,7 @@ Table of Contents
      6.1.  Overview
      6.2.  SLA assurance issue identification and observability
      6.3.  SLA assurance issue resolution and capability list
+     6.4.  Items for Further Discussion
    7.  SLA Assurance YANG module
    8.  Security Considerations
    9.  IANA Considerations
@@ -133,12 +136,13 @@ Table of Contents
    availability, and reliability of services.  Its objective is to
    detect potential issues proactively, diagnose their root causes, and
    initiate corrective actions to prevent SLA violations.  Several
-   standards already exist in this area.  SAIN [RFC9417] and [RFC9418]
-   defines an architecture and a YANG model for network service
-   assurance, respectively.  [I-D.ietf-nmop-network-incident-yang]
-   defines a YANG model for the network incident lifecycle management.
-   It aims to provide a standard way to report, diagnose, and help
-   resolve network incidents which may cause SLA violations.
+   standards already exist in this area.  Service Assurance for Intent-
+   Based Networking (SAIN) [RFC9417] defines an architecture, and
+   [RFC9418] defines a YANG data model, for network service assurance.
+   [I-D.ietf-nmop-network-incident-yang] defines a YANG model for the
+   network incident lifecycle management.  It aims to provide a standard
+   way to report, diagnose, and help resolve network incidents which may
+   cause SLA violations.
 
    However, several gaps remain in the existing standards and their
    associated YANG models with respect to supporting SLA assurance
@@ -152,12 +156,14 @@ Table of Contents
    same trench, thereby introducing a common point of failure.  Such
    conditions do not necessarily result in observable service
    degradation and, therefore, may not be identified through symptom-
-   based monitoring mechanisms.
+   based monitoring alone; detecting them may require information about
+   shared physical infrastructure that is not part of the service health
+   model.
 
    In addition, SLA assurance monitoring, in some cases, needs to detect
    and report events defined by SLA policies, such as bandwidth
    utilization exceeding a specified threshold.  The threshold values
-   are defined by the user, reflecting user’s perception of desired
+   are defined by the user, reflecting user's perception of desired
    network conditions.  The occurrence of such events does not
    necessarily indicate the presence of an incident affecting service
    health.  Instead, event reporting may serve as a precautionary
@@ -189,8 +195,8 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-   The following terms are defined in [RFC8632], [RFC9543],
-   [I-D.ietf-nmop-terminology] and are not redefined here:
+   The following terms are defined in [RFC8632], [RFC9543], [RFC9940]
+   and are not redefined here:
 
    *  Event
 
@@ -208,13 +214,16 @@ Table of Contents
 
    The following terms are defined in this document:
 
-   SLA assurance issue:  A network condition that, if not addressed in
-      time, may lead to SLA violations of services and incidents.  An
-      issue may either be symptomatic or asymptomatic.  Symptomatic
-      issues cause visible impacts to the health of services.
-      Asymptomatic issues, in contrast, do not impact services alone.
-      They lead to SLA violations in conjunction with other conditions
-      or events, such as a service reroute.
+   SLA assurance issue:  A detected network condition relevant to the
+      assessment or fulfillment of an SLA objective, which, if not
+      addressed in time, may lead to SLA violations of services and
+      incidents.  An issue may exist without customer-visible service
+      impact and without an associated incident.  An issue may either be
+      symptomatic or asymptomatic.  Symptomatic issues cause visible
+      impacts to the health of services.  Asymptomatic issues, in
+      contrast, do not impact services alone.  They lead to SLA
+      violations in conjunction with other conditions or events, such as
+      a service reroute.
 
    SLA assurance issue type:  A class used for the classification of SLA
       assurance issues.  Every issue belongs to a certain type.  There
@@ -313,7 +322,7 @@ Table of Contents
 
 3.3.  Dynamic Bandwidth Allocation for Cloud-Network Synergy
 
-   Cloud–Network Synergy-Based Dynamic Bandwidth Allocation is a use
+   Cloud-Network Synergy-Based Dynamic Bandwidth Allocation is a use
    case in optical transport networks that enables adaptive allocation
    of transport resources based on coordinated demands from cloud
    applications and network conditions.  It targets service scenarios
@@ -325,7 +334,7 @@ Table of Contents
    signals that reflect their resource requirements, including bandwidth
    demand, traffic intensity, latency sensitivity, and service priority.
    These requirements are communicated to the optical transport network
-   through a cloud–network interface.  At the same time, the optical
+   through a cloud-network interface.  At the same time, the optical
    transport network maintains real-time visibility of available
    capacity, including wavelength availability, link utilization, path
    constraints, and operational state across the optical infrastructure.
@@ -374,8 +383,6 @@ Table of Contents
    |                     +--------------------------------------------+
    |                     | Protection on the same route               |
    |                     +--------------------------------------------+
-   |                     | Protection on the same route               |
-   |                     +--------------------------------------------+
    |                     | Risk of traffic rerouting (during          |
    |                     | failover/reconvergence)                    |
    |                     +--------------------------------------------+
@@ -386,8 +393,8 @@ Table of Contents
    +---------------------+--------------------------------------------+
    | Delay               | Operating latency exceeds allowed limit    |
    |                     +--------------------------------------------+
-   |                     | Protection switching latency exceeds       |
-   |                     | allowed limit                              |
+   |                     | Protection-path latency exceeds allowed    |
+   |                     | limit                                      |
    +---------------------+--------------------------------------------+
 
                       Table 1: SLA Assurance Issues
@@ -413,11 +420,11 @@ Table of Contents
    types of issues may originate from abnormal conditions in the
    underlay optical transport network that provides connectivity for the
    services.  More specifically, there are three major sources of
-   possible root causes spanning in the three layers of transport
-   networks: (1) abnormal conditions in optical fibers, (2) error
-   conditions in optical WDM services, and (3) bit errors in OTN
-   payloads.  SLA assurance analysis must provide accurate diagnosis of
-   these issues and identify their underlying causes.
+   possible root causes spanning three layers of transport networks: (1)
+   abnormal conditions in optical fibers, (2) error conditions in
+   optical WDM services, and (3) bit errors in Optical Transport Network
+   (OTN) payloads.  SLA assurance analysis must provide accurate
+   diagnosis of these issues and identify their underlying causes.
 
    It should also be noted that certain SLA terms permit temporary
    service outages or transient service interruptions.  This is common,
@@ -440,7 +447,7 @@ Table of Contents
    This issue refers to the network condition that the customer-side
    interface receives a large volume of burst traffic within an
    extremely short period of time (on the order of milliseconds).  When
-   the instantaneous rate of microburst traffic exceeds the device’s
+   the instantaneous rate of microburst traffic exceeds the device's
    forwarding capacity, the device buffers the burst traffic for later
    transmission.  If the device does not have sufficient buffer space,
    the excess traffic is dropped, resulting in congestion and packet
@@ -458,7 +465,7 @@ Table of Contents
         threshold
 
    This issue refers to the problem that the packet loss on the customer
-   side causes the available bandwidth to fall short of the user’s
+   side causes the available bandwidth to fall short of the user's
    requirements.
 
    Possible cause at the OTN layer: Bit errors are being generated at
@@ -509,7 +516,7 @@ Table of Contents
    and may be triggered by transport defects, equipment failures, or
    upstream/downstream signal degradation.
 
-   Possible cause at the DWMD layer: The service experiences an
+   Possible cause at the DWDM layer: The service experiences an
    interruption at the optical (OCh/OMS/OTS) service level, indicating a
    loss of continuity in the optical channel transport path.  This
    results in a complete failure of the optical (OCh/OMS/OTS) signal
@@ -534,7 +541,7 @@ Table of Contents
    or packet loss at higher layers, also leading to transient service
    interruptions.
 
-   Possible cause at the OTN layer: The service’s electrical-layer (ODU/
+   Possible cause at the OTN layer: The service's electrical-layer (ODU/
    OSU) working path has switched to a protection path, resulting in a
    brief service interruption (service hit or transient outage).  This
    switchover indicates that a fault or degradation was detected on the
@@ -542,7 +549,7 @@ Table of Contents
    traffic; however, the switching process introduces a short-lived
    traffic disruption during path convergence.
 
-   Possible cause at the DWDM layer: The OCh service’s optical-layer
+   Possible cause at the DWDM layer: The OCh service's optical-layer
    working path has switched to a protection path, resulting in a brief
    service interruption (transient outage or service hit).  This
    indicates that degradation or a failure was detected on the original
@@ -563,7 +570,7 @@ Table of Contents
 
 4.2.3.  Failover protection failure
 
-   This issue may rise when the protection route of the service
+   This issue may arise when the protection route of the service
    experiences an interruption, resulting in protection failure.  This
    indicates that the backup (protection) path is unavailable or has
    lost continuity, preventing the protection mechanism from
@@ -574,7 +581,7 @@ Table of Contents
 
    Possible cause at the OTN layer: The protection route at the
    electrical-layer (ODU/OTU/VC) level experiences an interruption,
-   indicating a loss of continuity in the backup ODU/OUT/VC path.  As a
+   indicating a loss of continuity in the backup ODU/OTU/VC path.  As a
    result, the protection path becomes unavailable, preventing it from
    serving as a valid failover for the working route in the event of a
    failure.  This condition reduces service resilience and increases the
@@ -590,9 +597,9 @@ Table of Contents
    the risk of service outage under fault conditions.
 
    Possible cause at the fiber layer: The protection fiber traversed by
-   the service—referring to the logical fiber path not currently used by
-   the working route—experiences an interruption, indicating a loss of
-   continuity on the backup transport path.  Since this logical fiber
+   the service - referring to the logical fiber path not currently used
+   by the working route - experiences an interruption, indicating a loss
+   of continuity on the backup transport path.  Since this logical fiber
    represents the protection route, its failure renders the protection
    mechanism unavailable for failover, thereby reducing overall service
    resilience and increasing the risk of service disruption if the
@@ -605,7 +612,7 @@ Table of Contents
    Risk Link Group (SRLG), which may compromise the effectiveness of the
    protection mechanism in case of a failure.
 
-   Possible cause at the OTN layer: The service’s electrical-layer (ODU/
+   Possible cause at the OTN layer: The service's electrical-layer (ODU/
    VC) working and protection paths share a common SRLG (Shared Risk
    Link Group), as identified through protection segment analysis.  This
    indicates that the supposedly redundant primary and backup routes are
@@ -614,22 +621,22 @@ Table of Contents
    equipment).  As a result, the effectiveness of protection is
    compromised, increasing the risk of concurrent working and protection
    path failure and potential service outage under fault conditions.
-   Similarly, the issue may also rise when the service’s electrical-
+   Similarly, the issue may also arise when the service's electrical-
    layer working and protection paths traverse the same network element,
    indicating that both primary and backup routes are not node-disjoint.
    This introduces a shared risk at the equipment level, meaning that a
    single failure or maintenance event on that network element could
    simultaneously impact both working and protection paths.
 
-   Possible cause at the DWDM layer: The service’s optical-layer (OCh)
+   Possible cause at the DWDM layer: The service's optical-layer (OCh)
    working and protection paths share a common SRLG, indicating that the
    primary and backup routes are not fully physically diverse.  This
-   means both paths may traverse a shared risk element—such as a fiber
-   segment, conduit, node, or optical equipment—creating a single point
-   of correlated failure.  As a result, the protection scheme’s
+   means both paths may traverse a shared risk element - such as a fiber
+   segment, conduit, node, or optical equipment - creating a single
+   point of correlated failure.  As a result, the protection scheme's
    effectiveness is reduced, increasing the risk that a single failure
    could simultaneously impact both working and protection OCh paths,
-   potentially leading to service outage.  The issue may also rise if
+   potentially leading to service outage.  The issue may also arise if
    the OCh working and protection paths pass through the same network
    element (NE).  This creates a shared risk at the equipment level,
    where a single device failure, software fault, or maintenance
@@ -637,11 +644,11 @@ Table of Contents
    working and protection optical channels.
 
    Possible cause at the fiber layer: Fiber same cable and fiber same
-   trench scenarios may also lead to a “protection on the same route”
+   trench scenarios may also lead to a "protection on the same route"
    issue, where the working and protection paths are no longer truly
    physically diverse.  In such cases, although logical routing appears
    to provide redundancy, both fiber paths share the same underlying
-   physical infrastructure—either within the same cable or the same
+   physical infrastructure - either within the same cable or the same
    trench/duct corridor.  This creates a shared risk domain, meaning
    that a single physical failure event (such as cable cut, trench
    excavation damage, or environmental impact) can simultaneously affect
@@ -746,8 +753,8 @@ Table of Contents
    Risk Link Group) risk between the working and protection paths of the
    access segment, indicating that the primary and backup access routes
    are not fully physically or logically diverse.  Both paths may rely
-   on the same underlying risk domain—such as shared fiber
-   infrastructure, conduit, node, or access equipment—meaning that a
+   on the same underlying risk domain - such as shared fiber
+   infrastructure, conduit, node, or access equipment - meaning that a
    single failure event could simultaneously impact both working and
    protection connections.  As a result, the effectiveness of the access
    protection mechanism is reduced, increasing the risk of service
@@ -763,7 +770,7 @@ Table of Contents
 
 4.3.1.  Operating latency exceeds allowed limit
 
-   The service’s current working latency exceeds the defined threshold,
+   The service's current working latency exceeds the defined threshold,
    indicating that the end-to-end transmission delay is out of the
    acceptable range.  This may be due to latency threshold violations or
    an excessive detour factor (route inefficiency), where traffic is
@@ -821,11 +828,12 @@ Table of Contents
    recovery routing no longer satisfies the latency-related constraints
    specified by the SLA.
 
-4.3.2.  Protection switching latency exceeds allowed limit
+4.3.2.  Protection-path latency exceeds allowed limit
 
-   The service’s current protection latency exceeds the defined
+   The service's current protection latency exceeds the defined
    threshold, indicating that the end-to-end delay on the protection
-   path is out of the acceptable range.
+   path is out of the acceptable range.  This refers to the delay along
+   the protection path, not the time taken to switch to it.
 
    Possible cause at the OTN layer: The service experiences a detour
    factor violation on the protection electrical-layer (ODU) path.  The
@@ -856,6 +864,10 @@ Table of Contents
    logical fiber route significantly deviates from the optimal shortest
    path, resulting in increased transmission delay and causing the
    detour ratio to exceed the acceptable threshold.
+
+   A detour-factor violation does not by itself establish that the
+   absolute latency objective has been exceeded; the two conditions are
+   reported separately.
 
 5.  SLA Assurance Issue Management Architecture and SLA Assurance
     Capability
@@ -896,7 +908,7 @@ Table of Contents
 
    *  Upon detecting an issue, the Issue Server performs issue
       classification, impact analysis, and resolution generation, and
-      reports the issue to the OSS.
+      reports the issue to the Operations Support System (OSS).
 
    *  The OSS can query the Issue Server to retrieve information about
       identified issues, including their status, impact assessment, and
@@ -911,11 +923,11 @@ Table of Contents
    supported capabilities and enable external systems to query such
    capability information.
 
-   To support optical networks SLA assurance management, a unified data
-   model is required for standardized representation.  The model should
-   support classification (issue-sla-type) and hierarchical layering
-   (layer), where the layering follows the network architecture defined
-   in [ITU-T_G.709].
+   To support SLA assurance management in optical networks, a unified
+   data model is required for standardized representation.  The model
+   should support classification (issue-sla-type) and hierarchical
+   layering (layer), where the layering follows the network architecture
+   defined in [ITU-T_G.709].
 
    Specifically, the optical layer includes OTS, OMS, and OCh, while the
    electrical layer includes OTUk and ODUk (including both higher-order
@@ -960,12 +972,13 @@ Table of Contents
    and specifies mechanisms for detecting symptoms associated with
    service degradation.  For symptomatic issues, issue lifecycle
    management can leverage the capabilities provided by SAIN to support
-   issue detection, analysis, and handling.  However, SAIN does not
-   address asymptomatic issues, since such issues do not manifest as
-   observable service-level symptoms.  Therefore, the management of
-   asymptomatic issues requires issue lifecycle management functions to
-   interact directly with the underlying physical network resources and
-   associated monitoring mechanisms.
+   issue detection, analysis, and handling.  SAIN can also represent
+   dependencies that do not affect the reported service health.
+   Asymptomatic issues, however, may require additional information from
+   the underlying physical network resources and associated monitoring
+   mechanisms, such as shared routes or infrastructure, that is not part
+   of the service health model.  The division shown in Figure 2 is
+   illustrative rather than a restriction on SAIN capabilities.
 
 5.2.  Relationship with Incident
 
@@ -979,6 +992,22 @@ Table of Contents
    may have limited SLA assurance capabilities, which may prevent it
    from detecting certain classes of issues.  Therefore, issue
    management and incident management are complementary functions.
+
+   The terminology of [RFC9940] applies to this document.  Mplify
+   [Mplify173] and [Mplify175] distinguish an Issue experienced by a
+   Buyer from an Incident record created by a Seller.  An SLA assurance
+   issue, as used in this document, is an optical-domain assurance
+   construct: a detected condition relevant to the assessment or
+   fulfillment of an SLA objective.  It may exist without customer-
+   visible impact and without a Seller-created Incident.  The same
+   underlying condition may subsequently be associated with an Incident
+   when handled through incident-management processes, or with a Buyer-
+   experienced Issue if it results in customer-visible service impact.
+   For example, a protection-diversity risk detected in a shared trench
+   while the service is operating normally is an SLA assurance issue; it
+   does not imply a Buyer-experienced Issue, and whether it results in
+   an Incident record depends on the Seller's operational process.  This
+   document does not redefine the Mplify terms.
 
 5.3.  Interworking with ACTN framework
 
@@ -995,7 +1024,7 @@ Table of Contents
    within or alongside ACTN controllers in each domain, enabling
    correlation of service-level issues with underlying network
    conditions across multiple technology layers and administrative
-   domains.  ACTN’s provision of abstracted network views can be
+   domains.  ACTN's provision of abstracted network views can be
    leveraged by issue management functions to localize the impact of
    detected issues and to facilitate cross-domain impact analysis.
 
@@ -1006,54 +1035,82 @@ Table of Contents
    topology, connectivity, and service intent information that enhances
    issue detection accuracy and improves root cause localization.
 
+   In ACTN [RFC8453], a Provisioning Network Controller (PNC) can report
+   domain-level observations to a Multi-Domain Service Coordinator
+   (MDSC).  This model can supply the issue information for that
+   exchange; it does not define the corrective actions or the interfaces
+   used to invoke them.
+
 6.  SLA Assurance Data Model Design
 
 6.1.  Overview
 
    The YANG module "ietf-optical-sla-assurance" defines a data model for
    SLA assurance management in optical transport networks.  The module
-   provides a standard way to define, detect, and report issues that may
+   provides a standard way to represent and report issues that may
    impact service and network availability.  It enables consistent
-   modeling of assurance intent, impairment detection, and risk
-   reporting across optical transport domains.  The information reported
-   in the SLA assurance issue includes issue identification,
-   classification, severity, impacted objects, and remediation
-   suggestions.
+   reporting of impairments and risks across optical transport domains.
+   The information reported in the SLA assurance issue includes issue
+   identification, classification, severity, impacted objects, and
+   remediation suggestions.
 
-   At the top of "ietf-optical-sla-assurance " module is the SLA
-   Assurance container.  The SLA assurance issues are represented as a
-   list and indexed by "csn" (Customer Serial Number).  Each SLA
-   assurance issue is associated with issue metadata such as issue name,
-   type, category, layer, severity, and timing information.  In
-   addition, the module supports relationships between issues through
+   At the top of the "ietf-optical-sla-assurance" module is the read-
+   only SLA assurance container ("sla"); its contents are operational
+   state reported by the server.  The SLA assurance issues are
+   represented as a list and indexed by "csn" (Customer Serial Number).
+   Each SLA assurance issue is associated with issue metadata such as
+   issue name, type, category, layer, severity, and timing information.
+   In addition, the module supports relationships between issues through
    related-issues list and identifies source objects where the issue
    occurs.  The module also defines impacted objects (services and
    tunnels) that are affected by each issue.
 
-      module: ietf-optical-sla-assurance
-      +--rw sla
-         +--rw issues* [csn]
-            +--rw csn                 uint64
-            +--rw issue-id?           int64
-            +--rw issue-name?         string
-            +--rw issue-sla-type?     enumeration
-            +--rw layer?              enumeration
-            +--rw issue-category?     enumeration
-            +--rw occur-time?         yang:date-and-time
-            +--rw clear-time?         yang:date-and-time
-            +--rw description?        string
-            +--rw suggestion?         string
-            +--rw severity?           enumeration
-            +--rw related-issues* [csn]
-            |  +--rw csn    uint64
-            +--rw source-objects* [object-id]
-            |  +--rw object-name?   string
-            |  +--rw object-id      yang:uuid
-            |  +--rw object-type?   string
-            +--rw issue-type?         enumeration
-            +--rw impacted-objects* [service-name tunnel-name]
-               +--rw service-name    yang:uuid
-               +--rw tunnel-name     yang:uuid
+   module: ietf-optical-sla-assurance
+     +--ro sla
+        +--ro issues* [csn]
+           +--ro csn                 uint64
+           +--ro issue-id?           int64
+           +--ro issue-name?         string
+           +--ro issue-sla-type?     enumeration
+           +--ro layer?              enumeration
+           +--ro issue-category?     enumeration
+           +--ro occur-time?         yang:date-and-time
+           +--ro clear-time?         yang:date-and-time
+           +--ro description?        string
+           +--ro suggestion?         string
+           +--ro severity?           enumeration
+           +--ro related-issues* [csn]
+           |  +--ro csn    uint64
+           +--ro source-objects* [object-id]
+           |  +--ro object-name?   string
+           |  +--ro object-id      yang:uuid
+           |  +--ro object-type?   string
+           +--ro issue-type?         enumeration
+           +--ro impacted-objects* [service-name tunnel-name]
+              +--ro service-name    yang:uuid
+              +--ro tunnel-name     yang:uuid
+
+     rpcs:
+       +---x query-history-issue-statistics-by-service
+          +---w input
+          |  +---w service-name?   yang:uuid
+          |  +---w tunnel-name?    yang:uuid
+          |  +---w begin-time?     yang:date-and-time
+          |  +---w end-time?       yang:date-and-time
+          |  +---w sftp-url?       string
+          +--ro output
+             +--ro sla-issue-statistic* [service-name tunnel-name]
+                +--ro service-name    yang:uuid
+                +--ro tunnel-name     yang:uuid
+                +--ro service-pm
+                   +--ro interruptions?        uint64
+                   +--ro interrupt-duration?   uint64
+                   +--ro availability?         decimal64
+                   +--ro interrupt-history*
+                           [interrupt-begin-time interrupt-end-time]
+                      +--ro interrupt-begin-time    yang:date-and-time
+                      +--ro interrupt-end-time      yang:date-and-time
+                      +--ro interrupt-duration?     uint64
 
    The issue-sla-type enumeration classifies issues into three
    categories based on their impact: bandwidth, availability, and delay.
@@ -1079,27 +1136,11 @@ Table of Contents
    output provides comprehensive statistics including interruption
    count, total interruption duration, availability percentage, and a
    detailed interrupt history with begin/end times and durations.
+   Durations are expressed in milliseconds, and availability is a
+   percentage with six decimal places so that objectives such as 99.999%
+   can be represented.
 
-rpcs:
-   +---x query-history-issue-statistics-by-service
-      +---w input
-      |  +---w service-name?   yang:uuid
-      |  +---w tunnel-name?    yang:uuid
-      |  +---w begin-time?     date-and-time-s
-      |  +---w end-time?       date-and-time-s
-      |  +---w sftp-url?       string
-      +--ro output
-         +--ro sla-issue-statistic* [service-name tunnel-name]
-            +--ro service-name    yang:uuid
-            +--ro tunnel-name     yang:uuid
-            +--ro service-pm
-               +--ro interruptions?        uint64
-               +--ro interrupt-duration?   uint64
-               +--ro availability?         decimal64
-               +--ro interrupt-history* [interrupt-begin-time interrupt-end-time]
-                  +--ro interrupt-begin-time    yang:date-and-time
-                  +--ro interrupt-end-time      yang:date-and-time
-                  +--ro interrupt-duration?     uint64
+   rpcs:
 
    The model is designed to support closed-loop operations for SLA
    assurance in optical transport networks.  It enables automated
@@ -1110,8 +1151,8 @@ rpcs:
    violations) allows for proactive assurance management, helping to
    prevent incidents before they occur.
 
-   The module follows YANG 1.1 specification and imports standard YANG
-   types from ietf-yang-types.  It defines custom groupings for reusable
+   The module follows YANG 1.1 [RFC7950] and imports common types from
+   ietf-yang-types [RFC9911].  It defines custom groupings for reusable
    issue attributes (issue-base) and complete issue definitions (issue),
    promoting modularity and consistency across different
    implementations.  The use of UUID for service and tunnel identifiers
@@ -1137,20 +1178,19 @@ rpcs:
 
    Each SLA assurance issue is uniquely identified by a Customer Serial
    Number (CSN), which serves as the primary key in the issues list.
-   The CSN is a 64-bit unsigned integer that provides a globally unique
-   identifier for each issue within a management domain.  In addition to
-   the CSN, issues may optionally include an issue-id (64-bit signed
-   integer) for legacy compatibility or cross-system referencing, and a
-   human-readable issue-name (string up to 1000 characters) for operator
-   identification and documentation.
+   The CSN is a 64-bit unsigned integer that is unique within the
+   reporting server.  In addition to the CSN, issues may optionally
+   include an issue-id (64-bit signed integer) for legacy compatibility
+   or cross-system referencing, and a human-readable issue-name (string
+   up to 1000 characters) for operator identification and documentation.
 
    Observability of issues is enhanced through temporal and descriptive
    attributes.  The occur-time attribute records when the issue was
    first detected or identified, using the yang:date-and-time type for
    precise timestamping.  The clear-time attribute records when the
    issue was resolved or cleared, enabling calculation of issue duration
-   and trend analysis.  For issues that represent persistent conditions
-   rather than events, the clear-time may be unset until resolution.
+   and trend analysis.  The clear-time is unset while an issue is
+   current.
 
 6.3.  SLA assurance issue resolution and capability list
 
@@ -1180,361 +1220,412 @@ rpcs:
    specific issue instances through the issue-name and description
    attributes.
 
+6.4.  Items for Further Discussion
+
+   Editor's note: the following points are under discussion and are
+   expected to be resolved, with corresponding changes to the YANG
+   module, in a future revision.  This section will be removed before
+   publication.
+
+   *  Service and tunnel identification: the impacted-objects and
+      statistics lists are keyed by both service-name and tunnel-name,
+      so an issue affecting only a service, or only a tunnel, cannot
+      currently be represented.
+
+   *  Issue types: the issue catalogue in Section 4 is more specific
+      than the issue-sla-type and issue-category enumerations.  A
+      machine-readable, extensible issue-type definition is being
+      considered so that clients need not interpret the issue-name.
+
+   *  Statistics semantics: the rules for counting overlapping
+      interruptions, handling interruptions that span the observation
+      window, excluding planned maintenance, and reporting incomplete
+      measurement coverage need to be specified.
+
+   *  SFTP export: the file format, completion and error reporting for
+      the sftp-url parameter need to be specified, or the parameter
+      removed.
+
+   *  Capability discovery and issue resolution: the architecture in
+      Section 5 describes capability exposure and resolution operations
+      that the module does not yet define.
+
 7.  SLA Assurance YANG module
 
-   <CODE BEGINS> file "ietf-optical-sla-assurance@2026-07-02.yang"
-   module ietf-optical-sla-assurance  {
+   <CODE BEGINS> file "ietf-optical-sla-assurance@2026-10-13.yang"
+   module ietf-optical-sla-assurance {
      yang-version 1.1;
      namespace "urn:ietf:params:xml:ns:yang:ietf-optical-sla-assurance";
-     prefix hnts;
+     prefix ietf-optical-sla-assurance;
 
      import ietf-yang-types {
        prefix yang;
        reference
-         "RFC6991: Common YANG Data Types.";
+         "RFC 9911: Common YANG Data Types";
      }
+
      organization
        "IETF CCAMP Working Group";
-
      contact
-       "TODO";
+       "WG Web:   <https://datatracker.ietf.org/wg/ccamp/>
+        WG List:  <mailto:ccamp@ietf.org>
 
+        Author:   Henry Yu
+                  <mailto:hyu2010b@gmail.com>
+        Author:   Xiao Li
+                  <mailto:lixiao33@huawei.com>";
      description
-       "This module defines the interfaces for the SLA assurance management of optical networks";
+       "This module defines a data model for reporting Service Level
+        Agreement (SLA) assurance issues and service interruption
+        statistics in optical transport networks.
 
+        Copyright (c) 2026 IETF Trust and the persons identified as
+        authors of the code.  All rights reserved.
+
+        Redistribution and use in source and binary forms, with or
+        without modification, is permitted pursuant to, and subject to
+        the license terms contained in, the Revised BSD License set
+        forth in Section 4.c of the IETF Trust's Legal Provisions
+        Relating to IETF Documents
+        (https://trustee.ietf.org/license-info).
+
+        This version of this YANG module is part of RFC XXXX; see the
+        RFC itself for full legal notices.";
+
+     revision 2026-10-13 {
+       description
+         "Issue inventory made operational state; availability
+          precision, duration units and timestamp types corrected;
+          module metadata completed.";
+       reference
+         "RFC XXXX: A YANG Data Model for Service Level Agreement
+          (SLA) Assurance Management in Optical Transport Networks";
+     }
      revision 2026-07-02 {
        description
          "Initial revision.";
        reference
-         "A YANG Data Model for SLA.";
+         "draft-yu-ccamp-sla-assurance-optical-yang-01";
      }
 
      grouping issue-base {
+       description
+         "Attributes common to all SLA assurance issues.";
        leaf issue-id {
          type int64 {
            range "0..1000000000";
-       }
+         }
          description
-           "issue id";
+           "Optional issue identifier for legacy compatibility or
+            cross-system referencing.";
        }
        leaf issue-name {
          type string {
            length "0..1000";
          }
          description
-           "issue name";
+           "Human-readable issue name.";
        }
        leaf issue-sla-type {
          type enumeration {
            enum bandwidth {
-         value 1;
-         description
-               "bandwidth";
+             value 1;
+             description
+               "The issue affects service bandwidth.";
            }
            enum availability {
-         value 2;
-         description
-               "availability";
+             value 2;
+             description
+               "The issue affects network or service availability.";
            }
            enum delay {
-         value 3;
-         description
-               "delay";
+             value 3;
+             description
+               "The issue affects traffic delay.";
            }
          }
          description
-           "issue type";
+           "SLA dimension affected by the issue.";
        }
-
        leaf layer {
-       type enumeration {
+         type enumeration {
            enum service-layer {
-         value 1;
-         description
-               "service-layer";
+             value 1;
+             description
+               "Service layer.";
            }
            enum electrical-layer {
-         value 2;
-         description
-               "electrical-layer";
+             value 2;
+             description
+               "Electrical layer (OTUk/ODUk).";
            }
            enum optical-layer {
-         value 3;
-         description
-               "optical-layer";
+             value 3;
+             description
+               "Optical layer (OTS/OMS/OCh).";
            }
            enum fiber-layer {
-         value 4;
-         description
-               "fiber-layer";
+             value 4;
+             description
+               "Fiber layer.";
            }
          }
          description
-           "issue layer";
+           "Transport layer at which the issue originates.";
        }
-       description
-          "issue base";
      }
 
      grouping issue {
+       description
+         "An SLA assurance issue record.";
        leaf csn {
          type uint64 {
-             range "0..9223372036854775807";
+           range "0..9223372036854775807";
          }
          mandatory true;
          description
-           "serial number of the issue";
+           "Serial number of the issue, unique within the reporting
+            server.";
        }
        uses issue-base;
-
        leaf issue-category {
          type enumeration {
            enum fault {
-         value 1;
-         description
-               "fault";
+             value 1;
+             description
+               "An existing failure or impairment.";
            }
            enum risk {
-         value 2;
-         description
-               "risk";
+             value 2;
+             description
+               "A condition that may lead to an SLA violation.";
            }
          }
          description
-           "type of an issue";
+           "Whether the issue is an observed fault or a risk.";
        }
-
        leaf occur-time {
          type yang:date-and-time;
          description
-           "occur time of the issue";
+           "Time at which the issue was first detected.";
        }
-
        leaf clear-time {
          type yang:date-and-time;
          description
-           "clear time of the issue";
+           "Time at which the issue was cleared.  Absent while the
+            issue is current.";
        }
-
        leaf description {
          type string {
            length "0..1000";
          }
          description
-           "description of the issue";
+           "Description of the issue.";
        }
-
        leaf suggestion {
-         type string{
+         type string {
            length "0..1000";
          }
          description
-           "suggestion on handling the issue";
+           "Recommended handling of the issue.";
        }
        leaf severity {
          type enumeration {
            enum critical {
-         value 1;
-         description
-               "critical";
+             value 1;
+             description
+               "Critical.";
            }
            enum major {
-         value 2;
-         description
-               "major";
+             value 2;
+             description
+               "Major.";
            }
            enum minor {
-         value 3;
-         description
-               "minor";
+             value 3;
+             description
+               "Minor.";
            }
            enum info {
-         value 4;
-         description
-               "info";
+             value 4;
+             description
+               "Informational.";
            }
          }
          description
-           "severity of the issue";
+           "Severity of the issue.";
        }
-
        list related-issues {
-       key "csn";
+         key "csn";
+         description
+           "Issues related to this issue.";
          leaf csn {
            type uint64 {
              range "0..9223372036854775807";
            }
            description
-             "serial number of the issue";
-           }
-         description
-           "related issues of the issue";
+             "Serial number of the related issue.";
+         }
        }
-
-
        list source-objects {
          key "object-id";
+         description
+           "Resources on which the issue was detected.";
          leaf object-name {
            type string {
              length "0..255";
            }
            description
-             "resource name of the resource where the issue occurs";
+             "Name of the resource.";
          }
          leaf object-id {
            type yang:uuid;
            description
-             "uuid of the resource where the issue occurs";
+             "UUID of the resource.";
          }
          leaf object-type {
-           type string{
+           type string {
              length "0..64";
            }
            description
-             "resource type of the resource where the issue occurs";
+             "Type of the resource.";
          }
-           description
-             "the resource where the issue occurs";
        }
-       description
-         "issue of the resource";
      }
 
      grouping service-info {
+       description
+         "Identifiers of a service and the tunnel carrying it.";
        leaf service-name {
          type yang:uuid;
          description
-           "service name of the issue";
+           "UUID of the service.";
        }
        leaf tunnel-name {
          type yang:uuid;
          description
-           "tunnel name of the issue";
+           "UUID of the tunnel.";
        }
-       description
-         "to be added";
      }
 
      container sla {
+       config false;
        description
-         "The container for the sla";
-
+         "SLA assurance issues reported by the server.";
        list issues {
-           key "csn";
-           uses issue;
-           leaf issue-type {
-             type enumeration {
-               enum current {
-             value 1;
-                 description
-                   "current issue";
-               }
-               enum history {
-             value 2;
-                 description
-                   "history issue";
-               }
+         key "csn";
+         description
+           "List of SLA assurance issues.";
+         uses issue;
+         leaf issue-type {
+           type enumeration {
+             enum current {
+               value 1;
+               description
+                 "The issue is current.";
              }
-             description
-               "To be add";
-           }
-           list impacted-objects {
-             key "service-name tunnel-name";
-             uses service-info;
-             description
-               "impacted object of the issue";
+             enum history {
+               value 2;
+               description
+                 "The issue has been cleared.";
+             }
            }
            description
-             "issue list";
+             "Whether the issue is current or historical.";
+         }
+         list impacted-objects {
+           key "service-name tunnel-name";
+           description
+             "Services and tunnels impacted by the issue.";
+           uses service-info;
+         }
        }
-     }
-
-     typedef date-and-time-s {
-       type string {
-         pattern '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[\+\-]\d{2}:\d{2})';
-       }
-       description
-         "time, accurate to s";
      }
 
      rpc query-history-issue-statistics-by-service {
-     description
-         "issue RPC inteface";
+       description
+         "Retrieve historical SLA issue statistics for a service or
+          tunnel over a time range.";
        input {
          uses service-info;
          leaf begin-time {
-           type date-and-time-s;
+           type yang:date-and-time;
            description
-             "begin time of the issue statistics";
+             "Start of the observation window.";
          }
          leaf end-time {
-           type date-and-time-s;
+           type yang:date-and-time;
            description
-             "end time of the issue statistics";
+             "End of the observation window.";
          }
          leaf sftp-url {
            type string {
              length "0..255";
            }
            description
-             "sftp url";
+             "Optional SFTP destination to which the results are
+              exported.";
          }
        }
-
        output {
          list sla-issue-statistic {
            key "service-name tunnel-name";
+           description
+             "Statistics for one service and tunnel.";
            uses service-info;
-
            container service-pm {
+             description
+               "Service performance statistics for the observation
+                window.";
              leaf interruptions {
                type uint64 {
                  range "0..9223372036854775807";
                }
                description
-                 "interruptions";
+                 "Number of service interruptions.";
              }
              leaf interrupt-duration {
-         type uint64 {
+               type uint64 {
                  range "0..9223372036854775807";
                }
+               units "seconds";
                description
-                 "interrupt duration";
+                 "Total duration of service interruptions.";
              }
              leaf availability {
                type decimal64 {
-                 fraction-digits "2";
+                 fraction-digits 6;
+                 range "0..100";
                }
+               units "percent";
                description
-                 "availability";
+                 "Service availability over the observation window,
+                  as a percentage.";
              }
              list interrupt-history {
                key "interrupt-begin-time interrupt-end-time";
+               description
+                 "Individual service interruptions.";
                leaf interrupt-begin-time {
                  type yang:date-and-time;
                  description
-                   "interrupt begin time";
+                   "Start of the interruption.";
                }
                leaf interrupt-end-time {
                  type yang:date-and-time;
                  description
-                   "interrupt end time";
+                   "End of the interruption.";
                }
                leaf interrupt-duration {
                  type uint64 {
                    range "0..9223372036854775807";
                  }
+                 units "seconds";
                  description
-                   "interrupt duration";
+                   "Duration of the interruption.";
                }
-               description
-                 "interrupt history";
              }
-             description
-               "service pm data";
            }
-           description
-             "output of the history statistics";
          }
        }
      }
@@ -1548,8 +1639,12 @@ rpcs:
    is designed to be accessed via YANG-based management protocols, such
    as NETCONF [RFC6241] and RESTCONF [RFC8040].  These YANG-based
    management protocols (1) have to use a secure transport layer (e.g.,
-   SSH [RFC4252], TLS [RFC8446], and QUIC [RFC9000]) and (2) have to use
+   SSH [RFC4252], TLS [RFC9846], and QUIC [RFC9000]) and (2) have to use
    mutual authentication.
+
+   The issue inventory defined by this module is operational state and
+   contains no configuration nodes.  Access control is nevertheless
+   needed for read operations and for the statistics RPC.
 
    The Network Configuration Access Control Model (NACM) [RFC8341]
    provides the means to restrict access for particular NETCONF or
@@ -1558,9 +1653,9 @@ rpcs:
 
    Some of the readable data nodes in this YANG module may be considered
    sensitive or vulnerable in some network environments.  It is thus
-   important to control read access (e.g., via get, get-config, or
-   notification) to these data nodes.  These are the subtrees and data
-   nodes and their sensitivity/vulnerability:
+   important to control read access (e.g., via get or another state-data
+   retrieval mechanism) to these data nodes.  These are the subtrees and
+   data nodes and their sensitivity/vulnerability:
 
    '/sla/issues': This list specifies the SLA assurance issue entries
    for optical transport networks.  Unauthorized read access of this
@@ -1595,7 +1690,7 @@ rpcs:
    IANA is requested to register the following URI in the "ns" registry
    within the "IETF XML Registry" group [RFC3688]:
 
-   URI: urn:ietf:params:xml:ns:yang:hnts
+   URI: urn:ietf:params:xml:ns:yang:ietf-optical-sla-assurance
 
    Registrant Contact: The IESG.
 
@@ -1631,14 +1726,6 @@ rpcs:
               <https://datatracker.ietf.org/doc/html/draft-ietf-nmop-
               network-incident-yang-19>.
 
-   [I-D.ietf-nmop-terminology]
-              Davis, N., Farrel, A., Graf, T., Wu, Q., and C. Yu, "Some
-              Key Terms for Network Fault and Problem Management", Work
-              in Progress, Internet-Draft, draft-ietf-nmop-terminology-
-              23, 18 August 2025,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-nmop-
-              terminology-23>.
-
    [ITU-T_G.709]
               International Telecommunication Union, "Interfaces for the
               optical transport network", ITU-T G.709/Y.1331 (2020),
@@ -1667,6 +1754,10 @@ rpcs:
               (NETCONF)", RFC 6241, DOI 10.17487/RFC6241, June 2011,
               <https://www.rfc-editor.org/rfc/rfc6241>.
 
+   [RFC7950]  Bjorklund, M., Ed., "The YANG 1.1 Data Modeling Language",
+              RFC 7950, DOI 10.17487/RFC7950, August 2016,
+              <https://www.rfc-editor.org/rfc/rfc7950>.
+
    [RFC8040]  Bierman, A., Bjorklund, M., and K. Watsen, "RESTCONF
               Protocol", RFC 8040, DOI 10.17487/RFC8040, January 2017,
               <https://www.rfc-editor.org/rfc/rfc8040>.
@@ -1679,10 +1770,6 @@ rpcs:
               Access Control Model", STD 91, RFC 8341,
               DOI 10.17487/RFC8341, March 2018,
               <https://www.rfc-editor.org/rfc/rfc8341>.
-
-   [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
-              Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
-              <https://www.rfc-editor.org/rfc/rfc8446>.
 
    [RFC8632]  Vallin, S. and M. Bjorklund, "A YANG Data Model for Alarm
               Management", RFC 8632, DOI 10.17487/RFC8632, September
@@ -1698,13 +1785,32 @@ rpcs:
               RFC 9418, DOI 10.17487/RFC9418, July 2023,
               <https://www.rfc-editor.org/rfc/rfc9418>.
 
-   [RFC9543]  Farrel, A., Ed., Drake, J., Ed., Rokui, R., Homma, S.,
-              Makhijani, K., Contreras, L., and J. Tantsura, "A
-              Framework for Network Slices in Networks Built from IETF
-              Technologies", RFC 9543, DOI 10.17487/RFC9543, March 2024,
-              <https://www.rfc-editor.org/rfc/rfc9543>.
+   [RFC9846]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
+              Version 1.3", RFC 9846, DOI 10.17487/RFC9846, July 2026,
+              <https://www.rfc-editor.org/rfc/rfc9846>.
+
+   [RFC9911]  Schoenwaelder, J., Ed., "Common YANG Data Types",
+              RFC 9911, DOI 10.17487/RFC9911, December 2025,
+              <https://www.rfc-editor.org/info/rfc9911>.
 
 10.2.  Informative References
+
+   [Mplify173]
+              Mplify Alliance, "CIM Notification Service Business
+              Requirements and Use Cases", Mplify 173, October 2025,
+              <https://www.mplify.net/wp-content/uploads/Mplify-
+              173.pdf>.
+
+   [Mplify175]
+              Mplify Alliance, "Circuit Impairment and Maintenance
+              Notification API and Developer Guide", Mplify 175,
+              November 2025, <https://www.mplify.net/wp-content/uploads/
+              Mplify-175.pdf>.
+
+   [RFC8453]  Ceccarelli, D., Ed. and Y. Lee, Ed., "Framework for
+              Abstraction and Control of TE Networks (ACTN)", RFC 8453,
+              DOI 10.17487/RFC8453, August 2018,
+              <https://www.rfc-editor.org/rfc/rfc8453>.
 
    [RFC8969]  Wu, Q., Ed., Boucadair, M., Ed., Lopez, D., Xie, C., and
               L. Geng, "A Framework for Automating Service and Network
@@ -1716,10 +1822,22 @@ rpcs:
               Architecture", RFC 9417, DOI 10.17487/RFC9417, July 2023,
               <https://www.rfc-editor.org/rfc/rfc9417>.
 
+   [RFC9543]  Farrel, A., Ed., Drake, J., Ed., Rokui, R., Homma, S.,
+              Makhijani, K., Contreras, L., and J. Tantsura, "A
+              Framework for Network Slices in Networks Built from IETF
+              Technologies", RFC 9543, DOI 10.17487/RFC9543, March 2024,
+              <https://www.rfc-editor.org/rfc/rfc9543>.
+
+   [RFC9940]  Davis, N., Ed., Farrel, A., Ed., Graf, T., Wu, Q., and C.
+              Yu, "Some Key Terms for Network Fault and Problem
+              Management", RFC 9940, DOI 10.17487/RFC9940, April 2026,
+              <https://www.rfc-editor.org/rfc/rfc9940>.
+
 Acknowledgments
 
-   The authors would like to thank Yanlei Zheng, Italo Busi for their
-   valuable comments and great input to this work.
+   The authors would like to thank Yanlei Zheng, Italo Busi, and
+   Christian Dieckhoff for their valuable comments and input to this
+   work.
 
 Authors' Addresses
 
@@ -1741,3 +1859,8 @@ Authors' Addresses
    Xing Zhao
    CAICT
    Email: zhaoxing@caict.ac.cn
+
+
+   Daniel King
+   Old Dog Consulting
+   Email: daniel@olddog.co.uk
