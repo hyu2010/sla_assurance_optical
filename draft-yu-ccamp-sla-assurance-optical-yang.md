@@ -11,11 +11,6 @@ consensus: true
 v: 3
 area: "Routing"
 workgroup: "Common Control and Measurement Plane"
-keyword:
-
-- next generation
-- unicorn
-- sparkling distributed ledger
 venue:
   group: "Common Control and Measurement Plane"
   type: "Working Group"
@@ -42,8 +37,25 @@ author:
     fullname: Xing Zhao
     organization: CAICT
     email: zhaoxing@caict.ac.cn
+-
+    fullname: Daniel King
+    organization: Old Dog Consulting
+    email: daniel@olddog.co.uk
 
 normative:
+
+  RFC9911:
+    title: Common YANG Data Types
+    author:
+      -
+        ins: J. Schoenwaelder
+        name: Juergen Schoenwaelder
+        role: editor
+    date: 2025-12
+    seriesinfo:
+      RFC: 9911
+      DOI: 10.17487/RFC9911
+    target: https://www.rfc-editor.org/info/rfc9911
 
   ITU-T_G.709:
     title: Interfaces for the optical transport network
@@ -56,26 +68,43 @@ normative:
 
 informative:
 
+  Mplify173:
+    title: CIM Notification Service Business Requirements and Use Cases
+    author:
+      org: Mplify Alliance
+    date: 2025-10
+    seriesinfo:
+      Mplify: 173
+    target: https://www.mplify.net/wp-content/uploads/Mplify-173.pdf
+
+  Mplify175:
+    title: Circuit Impairment and Maintenance Notification API and Developer Guide
+    author:
+      org: Mplify Alliance
+    date: 2025-11
+    seriesinfo:
+      Mplify: 175
+    target: https://www.mplify.net/wp-content/uploads/Mplify-175.pdf
+
 --- abstract
 
 This document defines a YANG module for SLA assurance management in
 optical transport networks. The module provides a standard way to
-define, detect, and report issues that may impact service and network
-availability. It enables consistent modeling of assurance intent,
-impairment detection, and risk reporting across optical transport
-domains. The YANG model is designed to support closed-loop operations,
+represent and report issues that may impact service and network
+availability. It enables consistent reporting of impairments and risks
+across optical transport domains. The YANG model is designed to support closed-loop operations,
 allowing automated monitoring, analysis, and remediation workflows to
-maintain high service reliability and SLA compliance
+maintain high service reliability and SLA compliance.
 
 --- middle
 
 # Introduction
 
-Service Level Agreement (SLA) assurance management in optical transport networks concerns the continuous monitoring, analysis, and management of network conditions that may impact the performance, availability, and reliability of services. Its objective is to detect potential issues proactively, diagnose their root causes, and initiate corrective actions to prevent SLA violations. Several standards already exist in this area. SAIN {{?RFC9417}} and {{!RFC9418}} defines an architecture and a YANG model for network service assurance, respectively. {{!I-D.ietf-nmop-network-incident-yang}} defines a YANG model for the network incident lifecycle management. It aims to provide a standard way to report, diagnose, and help resolve network incidents which may cause SLA violations.
+Service Level Agreement (SLA) assurance management in optical transport networks concerns the continuous monitoring, analysis, and management of network conditions that may impact the performance, availability, and reliability of services. Its objective is to detect potential issues proactively, diagnose their root causes, and initiate corrective actions to prevent SLA violations. Several standards already exist in this area. Service Assurance for Intent-Based Networking (SAIN) {{?RFC9417}} defines an architecture, and {{!RFC9418}} defines a YANG data model, for network service assurance. {{!I-D.ietf-nmop-network-incident-yang}} defines a YANG model for the network incident lifecycle management. It aims to provide a standard way to report, diagnose, and help resolve network incidents which may cause SLA violations.
 
-However, several gaps remain in the existing standards and their associated YANG models with respect to supporting SLA assurance management in optical transport networks. First, the SAIN framework focuses on the detection and resolution of symptoms, that is, conditions indicating that a service instance or subservice is not operating in a fully healthy state. In optical transport networks, however, undesirable network conditions may exist that increase the risk of SLA violations while remaining asymptomatic. For example, multiple service paths may traverse fiber links deployed within the same trench, thereby introducing a common point of failure. Such conditions do not necessarily result in observable service degradation and, therefore, may not be identified through symptom-based monitoring mechanisms.
+However, several gaps remain in the existing standards and their associated YANG models with respect to supporting SLA assurance management in optical transport networks. First, the SAIN framework focuses on the detection and resolution of symptoms, that is, conditions indicating that a service instance or subservice is not operating in a fully healthy state. In optical transport networks, however, undesirable network conditions may exist that increase the risk of SLA violations while remaining asymptomatic. For example, multiple service paths may traverse fiber links deployed within the same trench, thereby introducing a common point of failure. Such conditions do not necessarily result in observable service degradation and, therefore, may not be identified through symptom-based monitoring alone; detecting them may require information about shared physical infrastructure that is not part of the service health model.
 
-In addition, SLA assurance monitoring, in some cases, needs to detect and report events defined by SLA policies, such as bandwidth utilization exceeding a specified threshold. The threshold values are defined by the user, reflecting user’s perception of desired network conditions. The occurrence of such events does not necessarily indicate the presence of an incident affecting service health. Instead, event reporting may serve as a precautionary mechanism requested by the user. A mechanism and a YANG model are therefore needed to support the detection and reporting of such events.
+In addition, SLA assurance monitoring, in some cases, needs to detect and report events defined by SLA policies, such as bandwidth utilization exceeding a specified threshold. The threshold values are defined by the user, reflecting user's perception of desired network conditions. The occurrence of such events does not necessarily indicate the presence of an incident affecting service health. Instead, event reporting may serve as a precautionary mechanism requested by the user. A mechanism and a YANG model are therefore needed to support the detection and reporting of such events.
 
 Thirdly, some optical network conditions, such as fiber attenuation, may degrade silently and gradually before resulting in observable incidents. These conditions may persist for an extended period of time. For SLA assurance management in optical networks, it is preferable to define, detect, and resolve such issues proactively rather than waiting for them to escalate into incidents.
 
@@ -87,7 +116,7 @@ This document defines a YANG data model for SLA assurance management in optical 
 
 {::boilerplate bcp14-tagged}
 
-The following terms are defined in {{!RFC8632}}, {{!RFC9543}}, {{!I-D.ietf-nmop-terminology}} and are not redefined here:
+The following terms are defined in {{!RFC8632}}, {{?RFC9543}}, {{?RFC9940}} and are not redefined here:
 
 - Event
 - Incident
@@ -100,7 +129,7 @@ The following terms are defined in {{!RFC8632}}, {{!RFC9543}}, {{!I-D.ietf-nmop-
 The following terms are defined in this document:
 
 SLA assurance issue:
-: A network condition that, if not addressed in time, may lead to SLA violations of services and incidents. An issue may either be symptomatic or asymptomatic. Symptomatic issues cause visible impacts to the health of services. Asymptomatic issues, in contrast, do not impact services alone. They lead to SLA violations in conjunction with other conditions or events, such as a service reroute.
+: A detected network condition relevant to the assessment or fulfillment of an SLA objective, which, if not addressed in time, may lead to SLA violations of services and incidents. An issue may exist without customer-visible service impact and without an associated incident. An issue may either be symptomatic or asymptomatic. Symptomatic issues cause visible impacts to the health of services. Asymptomatic issues, in contrast, do not impact services alone. They lead to SLA violations in conjunction with other conditions or events, such as a service reroute.
 
 SLA assurance issue type:
 : A class used for the classification of SLA assurance issues. Every issue belongs to a certain type. There is a limited number of the types of assurance issues in optical networks.
@@ -144,15 +173,15 @@ The objective of this use case is to maintain continuous SLA compliance througho
 
 ## Dynamic Bandwidth Allocation for Cloud-Network Synergy
 
-Cloud–Network Synergy-Based Dynamic Bandwidth Allocation is a use case in optical transport networks that enables adaptive allocation of transport resources based on coordinated demands from cloud applications and network conditions. It targets service scenarios such as AI training workloads, distributed computing, cloud bursting, and large-scale data synchronization, where bandwidth demand is highly dynamic and time-varying.
+Cloud-Network Synergy-Based Dynamic Bandwidth Allocation is a use case in optical transport networks that enables adaptive allocation of transport resources based on coordinated demands from cloud applications and network conditions. It targets service scenarios such as AI training workloads, distributed computing, cloud bursting, and large-scale data synchronization, where bandwidth demand is highly dynamic and time-varying.
 
-In this use case, cloud applications continuously generate workload signals that reflect their resource requirements, including bandwidth demand, traffic intensity, latency sensitivity, and service priority. These requirements are communicated to the optical transport network through a cloud–network interface. At the same time, the optical transport network maintains real-time visibility of available capacity, including wavelength availability, link utilization, path constraints, and operational state across the optical infrastructure.
+In this use case, cloud applications continuously generate workload signals that reflect their resource requirements, including bandwidth demand, traffic intensity, latency sensitivity, and service priority. These requirements are communicated to the optical transport network through a cloud-network interface. At the same time, the optical transport network maintains real-time visibility of available capacity, including wavelength availability, link utilization, path constraints, and operational state across the optical infrastructure.
 
 Based on the correlation between cloud-side demand signals and network-side resource state, the system determines when and where bandwidth adjustments are required. When increased demand is detected, the network evaluates feasible optical path and wavelength allocation options that satisfy service constraints. Conversely, when demand decreases, allocated resources may be released or re-optimized to improve overall network efficiency.
 
 The objective of this use case is to achieve efficient and elastic utilization of optical transport resources while ensuring that cloud application performance requirements are consistently met. By enabling coordinated decision-making between cloud workloads and optical network control, the system improves resource utilization, reduces congestion by dynamic bandwidth control of hard-pipes, and enhances the responsiveness of the transport network to dynamic application demands.
 
-# SLA assurance issues
+# SLA assurance issues {#sla-assurance-issues}
 
 As shown in {{tab-1}}, SLA assurance issues in optical networks can be classified, based on their impact, into three categories: (1) those affecting service bandwidth, (2) those affecting network and service availability, and (3) those introducing traffic delay.
 
@@ -176,7 +205,7 @@ As shown in {{tab-1}}, SLA assurance issues in optical networks can be classifie
         <td>Network bit error rate / packet loss rate higher than allowed threshold</td>
       </tr>
       <tr>
-        <td rowspan="8">Network and service availability</td>
+        <td rowspan="7">Network and service availability</td>
         <td>Service outage</td>
       </tr>
       <tr>
@@ -184,9 +213,6 @@ As shown in {{tab-1}}, SLA assurance issues in optical networks can be classifie
       </tr>
       <tr>
         <td>Failover protection failure</td>
-      </tr>
-      <tr>
-        <td>Protection on the same route</td>
       </tr>
       <tr>
         <td>Protection on the same route</td>
@@ -205,14 +231,14 @@ As shown in {{tab-1}}, SLA assurance issues in optical networks can be classifie
         <td>Operating latency exceeds allowed limit</td>
       </tr>
       <tr>
-        <td>Protection switching latency exceeds allowed limit</td>
+        <td>Protection-path latency exceeds allowed limit</td>
       </tr>
     </tbody>
   </table>
 
 Most SLA assurance issues, if left unaddressed, are expected to eventually result in SLA violations and incidents. However, exceptions exist. For example, an issue indicating that bandwidth utilization has exceeded an SLA-defined threshold does not necessarily imply the presence of a service health problem or any network equipment failures, particularly when the configured threshold provides a substantial operational margin. In such cases, the impact analysis included in the issue report SHOULD indicate that no immediate service impact is expected. The report MAY also recommend that the user review and adjust the threshold value to better align with the intended monitoring objectives.
 
-Issues that could eventually lead to SLA violations may be either symptomatic or asymptomatic. For symptomatic issues, the associated symptoms are observable at the service layer and indicate degradation in the health of one or more services. In contrast, asymptomatic issues may not manifest as observable symptoms in any affected service. Despite this distinction, the underlying causes of both types of issues may originate from abnormal conditions in the underlay optical transport network that provides connectivity for the services. More specifically, there are three major sources of possible root causes spanning in the three layers of transport networks: (1) abnormal conditions in optical fibers, (2) error conditions in optical WDM services, and (3) bit errors in OTN payloads. SLA assurance analysis must provide accurate diagnosis of these issues and identify their underlying causes.
+Issues that could eventually lead to SLA violations may be either symptomatic or asymptomatic. For symptomatic issues, the associated symptoms are observable at the service layer and indicate degradation in the health of one or more services. In contrast, asymptomatic issues may not manifest as observable symptoms in any affected service. Despite this distinction, the underlying causes of both types of issues may originate from abnormal conditions in the underlay optical transport network that provides connectivity for the services. More specifically, there are three major sources of possible root causes spanning three layers of transport networks: (1) abnormal conditions in optical fibers, (2) error conditions in optical WDM services, and (3) bit errors in Optical Transport Network (OTN) payloads. SLA assurance analysis must provide accurate diagnosis of these issues and identify their underlying causes.
 
 It should also be noted that certain SLA terms permit temporary service outages or transient service interruptions. This is common, for example, for best-effort services or services without protection mechanisms. In such cases, the distinction between issues and incidents may become less clear, and the two concepts may overlap. Accordingly, issue management MAY defer the handling of such cases to incident management processes.
 
@@ -224,7 +250,7 @@ Bandwidth issues are service assurance conditions that impact the capacity, thro
 
 ### Traffic spike (sudden increase in traffic)
 
-This issue refers to the network condition that the customer-side interface receives a large volume of burst traffic within an extremely short period of time (on the order of milliseconds). When the instantaneous rate of microburst traffic exceeds the device’s forwarding capacity, the device buffers the burst traffic for later transmission. If the device does not have sufficient buffer space, the excess traffic is dropped, resulting in congestion and packet loss.
+This issue refers to the network condition that the customer-side interface receives a large volume of burst traffic within an extremely short period of time (on the order of milliseconds). When the instantaneous rate of microburst traffic exceeds the device's forwarding capacity, the device buffers the burst traffic for later transmission. If the device does not have sufficient buffer space, the excess traffic is dropped, resulting in congestion and packet loss.
 
 ### Bandwidth utilization exceeds threshold defined in the SLA
 
@@ -232,7 +258,7 @@ This issue refers to the network condition that the customer-side service traffi
 
 ### Network bit error rate (or packet loss rate) higher than allowed threshold
 
-This issue refers to the problem that the packet loss on the customer side causes the available bandwidth to fall short of the user’s requirements.
+This issue refers to the problem that the packet loss on the customer side causes the available bandwidth to fall short of the user's requirements.
 
 Possible cause at the OTN layer: Bit errors are being generated at the electrical-layer service level, specifically within digital layer channels (such as ODUk and OTUk), indicating that the transmission at the digital wrapper/virtual container layer is experiencing signal corruption. This may result from impairments in the physical transmission path or intermediate equipment, and can lead to degraded service quality or potential data integrity issues at the service layer.
 
@@ -250,7 +276,7 @@ The service experiences either a network-side interruption or a customer-side in
 
 Possible cause at the OTN layer: The service experiences an interruption at the electrical-layer service level (ODUk/OTUk/VC), indicating a loss of continuity in the digital wrapper/virtual container transport layer. This type of failure typically results in a complete break in the ODUk/OTUk signal path, causing service disruption and potential traffic loss across the affected connection, and may be triggered by transport defects, equipment failures, or upstream/downstream signal degradation.
 
-Possible cause at the DWMD layer: The service experiences an interruption at the optical (OCh/OMS/OTS) service level, indicating a loss of continuity in the optical channel transport path. This results in a complete failure of the optical (OCh/OMS/OTS) signal transmission, leading to service outage and traffic disruption. Such an interruption may be caused by severe optical impairments, fiber cuts, transmitter/receiver failures, or failures in optical switching elements along the transmission path.
+Possible cause at the DWDM layer: The service experiences an interruption at the optical (OCh/OMS/OTS) service level, indicating a loss of continuity in the optical channel transport path. This results in a complete failure of the optical (OCh/OMS/OTS) signal transmission, leading to service outage and traffic disruption. Such an interruption may be caused by severe optical impairments, fiber cuts, transmitter/receiver failures, or failures in optical switching elements along the transmission path.
 
 Possible cause at the fiber medium layer: The logical fiber path traversed by the service experiences an interruption, indicating a complete loss of continuity along the virtualized or logical optical transport route. This results in a service outage due to the inability of the end-to-end path to maintain signal transmission. Such an interruption may be caused by failures in underlying physical fiber links, intermediate network elements, or logical path provisioning issues within the optical transport network.
 
@@ -258,31 +284,31 @@ Possible cause at the fiber medium layer: The logical fiber path traversed by th
 
 Service experiences momentary interruptions. For instance, optical power fluctuations in the fiber may cause short bursts of bit errors or packet loss at higher layers, also leading to transient service interruptions.
 
-Possible cause at the OTN layer: The service’s electrical-layer (ODU/OSU) working path has switched to a protection path, resulting in a brief service interruption (service hit or transient outage). This switchover indicates that a fault or degradation was detected on the original working route, triggering protection mechanisms to reroute traffic; however, the switching process introduces a short-lived traffic disruption during path convergence.
+Possible cause at the OTN layer: The service's electrical-layer (ODU/OSU) working path has switched to a protection path, resulting in a brief service interruption (service hit or transient outage). This switchover indicates that a fault or degradation was detected on the original working route, triggering protection mechanisms to reroute traffic; however, the switching process introduces a short-lived traffic disruption during path convergence.
 
-Possible cause at the DWDM layer: The OCh service’s optical-layer working path has switched to a protection path, resulting in a brief service interruption (transient outage or service hit). This indicates that degradation or a failure was detected on the original optical channel working route, triggering protection mechanisms to reroute traffic. During the switching and path convergence process, a short-lived disruption may occur, leading to a momentary service blip before normal transmission resumes on the protection path.
+Possible cause at the DWDM layer: The OCh service's optical-layer working path has switched to a protection path, resulting in a brief service interruption (transient outage or service hit). This indicates that degradation or a failure was detected on the original optical channel working route, triggering protection mechanisms to reroute traffic. During the switching and path convergence process, a short-lived disruption may occur, leading to a momentary service blip before normal transmission resumes on the protection path.
 
 Possible cause at the fiber layer: Abnormal optical power fluctuations occur on the fiber path traversed by the service, causing transient instability in the received signal level. These rapid variations in optical power can lead to momentary loss of signal integrity, triggering a brief service interruption (service hit or flash outage). Such behavior is typically associated with physical-layer impairments such as connector issues, micro-bending, fiber movement, or unstable optical components along the transmission path.
 
 ### Failover protection failure
 
-This issue may rise when the protection route of the service experiences an interruption, resulting in protection failure. This indicates that the backup (protection) path is unavailable or has lost continuity, preventing the protection mechanism from successfully taking over in the event of a working path fault. As a result, the service is left without effective redundancy, increasing the risk of service disruption or prolonged outage if a failure occurs on the active path.
+This issue may arise when the protection route of the service experiences an interruption, resulting in protection failure. This indicates that the backup (protection) path is unavailable or has lost continuity, preventing the protection mechanism from successfully taking over in the event of a working path fault. As a result, the service is left without effective redundancy, increasing the risk of service disruption or prolonged outage if a failure occurs on the active path.
 
-Possible cause at the OTN layer: The protection route at the electrical-layer (ODU/OTU/VC) level experiences an interruption, indicating a loss of continuity in the backup ODU/OUT/VC path. As a result, the protection path becomes unavailable, preventing it from serving as a valid failover for the working route in the event of a failure. This condition reduces service resilience and increases the risk of service disruption if the primary electrical-layer path degrades or fails.
+Possible cause at the OTN layer: The protection route at the electrical-layer (ODU/OTU/VC) level experiences an interruption, indicating a loss of continuity in the backup ODU/OTU/VC path. As a result, the protection path becomes unavailable, preventing it from serving as a valid failover for the working route in the event of a failure. This condition reduces service resilience and increases the risk of service disruption if the primary electrical-layer path degrades or fails.
 
 Possible cause at the DWDM layer: The protection route at the optical-layer (OCh) experiences an interruption, meaning the backup OCh (or OCh protection path) has lost continuity or become unavailable. As a result, the optical protection mechanism cannot successfully take over traffic in the event of a failure on the working channel, thereby reducing service resilience and increasing the risk of service outage under fault conditions.
 
-Possible cause at the fiber layer: The protection fiber traversed by the service—referring to the logical fiber path not currently used by the working route—experiences an interruption, indicating a loss of continuity on the backup transport path. Since this logical fiber represents the protection route, its failure renders the protection mechanism unavailable for failover, thereby reducing overall service resilience and increasing the risk of service disruption if the working path subsequently fails.
+Possible cause at the fiber layer: The protection fiber traversed by the service - referring to the logical fiber path not currently used by the working route - experiences an interruption, indicating a loss of continuity on the backup transport path. Since this logical fiber represents the protection route, its failure renders the protection mechanism unavailable for failover, thereby reducing overall service resilience and increasing the risk of service disruption if the working path subsequently fails.
 
 ### Protection on the same route
 
 The working and protection paths of the service partially overlap, such as sharing common nodes or fiber links within the same Shared Risk Link Group (SRLG), which may compromise the effectiveness of the protection mechanism in case of a failure.
 
-Possible cause at the OTN layer: The service’s electrical-layer (ODU/VC) working and protection paths share a common SRLG (Shared Risk Link Group), as identified through protection segment analysis. This indicates that the supposedly redundant primary and backup routes are not fully disjoint and may be simultaneously affected by a single underlying failure domain (e.g., shared fiber segment, duct, node, or equipment). As a result, the effectiveness of protection is compromised, increasing the risk of concurrent working and protection path failure and potential service outage under fault conditions. Similarly, the issue may also rise when the service’s electrical-layer working and protection paths traverse the same network element, indicating that both primary and backup routes are not node-disjoint. This introduces a shared risk at the equipment level, meaning that a single failure or maintenance event on that network element could simultaneously impact both working and protection paths.
+Possible cause at the OTN layer: The service's electrical-layer (ODU/VC) working and protection paths share a common SRLG (Shared Risk Link Group), as identified through protection segment analysis. This indicates that the supposedly redundant primary and backup routes are not fully disjoint and may be simultaneously affected by a single underlying failure domain (e.g., shared fiber segment, duct, node, or equipment). As a result, the effectiveness of protection is compromised, increasing the risk of concurrent working and protection path failure and potential service outage under fault conditions. Similarly, the issue may also arise when the service's electrical-layer working and protection paths traverse the same network element, indicating that both primary and backup routes are not node-disjoint. This introduces a shared risk at the equipment level, meaning that a single failure or maintenance event on that network element could simultaneously impact both working and protection paths.
 
-Possible cause at the DWDM layer: The service’s optical-layer (OCh) working and protection paths share a common SRLG, indicating that the primary and backup routes are not fully physically diverse. This means both paths may traverse a shared risk element—such as a fiber segment, conduit, node, or optical equipment—creating a single point of correlated failure. As a result, the protection scheme’s effectiveness is reduced, increasing the risk that a single failure could simultaneously impact both working and protection OCh paths, potentially leading to service outage. The issue may also rise if the OCh working and protection paths pass through the same network element (NE). This creates a shared risk at the equipment level, where a single device failure, software fault, or maintenance activity on that network element could simultaneously impact both working and protection optical channels.
+Possible cause at the DWDM layer: The service's optical-layer (OCh) working and protection paths share a common SRLG, indicating that the primary and backup routes are not fully physically diverse. This means both paths may traverse a shared risk element - such as a fiber segment, conduit, node, or optical equipment - creating a single point of correlated failure. As a result, the protection scheme's effectiveness is reduced, increasing the risk that a single failure could simultaneously impact both working and protection OCh paths, potentially leading to service outage. The issue may also arise if the OCh working and protection paths pass through the same network element (NE). This creates a shared risk at the equipment level, where a single device failure, software fault, or maintenance activity on that network element could simultaneously impact both working and protection optical channels.
 
-Possible cause at the fiber layer: Fiber same cable and fiber same trench scenarios may also lead to a “protection on the same route” issue, where the working and protection paths are no longer truly physically diverse. In such cases, although logical routing appears to provide redundancy, both fiber paths share the same underlying physical infrastructure—either within the same cable or the same trench/duct corridor. This creates a shared risk domain, meaning that a single physical failure event (such as cable cut, trench excavation damage, or environmental impact) can simultaneously affect both the working and protection fibers. As a result, the protection mechanism may fail to provide effective redundancy, significantly increasing the risk of concurrent path failure and resulting service interruption.
+Possible cause at the fiber layer: Fiber same cable and fiber same trench scenarios may also lead to a "protection on the same route" issue, where the working and protection paths are no longer truly physically diverse. In such cases, although logical routing appears to provide redundancy, both fiber paths share the same underlying physical infrastructure - either within the same cable or the same trench/duct corridor. This creates a shared risk domain, meaning that a single physical failure event (such as cable cut, trench excavation damage, or environmental impact) can simultaneously affect both the working and protection fibers. As a result, the protection mechanism may fail to provide effective redundancy, significantly increasing the risk of concurrent path failure and resulting service interruption.
 
 ### Risk of traffic rerouting (during failover/reconvergence)
 
@@ -312,7 +338,7 @@ Possible cause at the OTN layer: The protection configuration of the access segm
 
 Possible cause at the DWDM layer: TBD
 
-Possible cause at the fiber layer: There is a shared SRLG (Shared Risk Link Group) risk between the working and protection paths of the access segment, indicating that the primary and backup access routes are not fully physically or logically diverse. Both paths may rely on the same underlying risk domain—such as shared fiber infrastructure, conduit, node, or access equipment—meaning that a single failure event could simultaneously impact both working and protection connections. As a result, the effectiveness of the access protection mechanism is reduced, increasing the risk of service interruption and lowering overall service resilience.
+Possible cause at the fiber layer: There is a shared SRLG (Shared Risk Link Group) risk between the working and protection paths of the access segment, indicating that the primary and backup access routes are not fully physically or logically diverse. Both paths may rely on the same underlying risk domain - such as shared fiber infrastructure, conduit, node, or access equipment - meaning that a single failure event could simultaneously impact both working and protection connections. As a result, the effectiveness of the access protection mechanism is reduced, increasing the risk of service interruption and lowering overall service resilience.
 
 ## Latency issues
 
@@ -320,7 +346,7 @@ Latency issues are service assurance conditions that affect the delay experience
 
 ### Operating latency exceeds allowed limit
 
-The service’s current working latency exceeds the defined threshold, indicating that the end-to-end transmission delay is out of the acceptable range. This may be due to latency threshold violations or an excessive detour factor (route inefficiency), where traffic is forced onto a longer-than-optimal path.
+The service's current working latency exceeds the defined threshold, indicating that the end-to-end transmission delay is out of the acceptable range. This may be due to latency threshold violations or an excessive detour factor (route inefficiency), where traffic is forced onto a longer-than-optimal path.
 
 Possible causes at the OTN layer: The service may experience a latency-related SLA issue due to changes in the routing characteristics of the working electrical-layer (ODU) service path. For example, an electrical-layer path switch may result in the newly selected working path exhibiting a higher end-to-end latency than the original route, causing the measured latency to exceed the configured threshold. In addition, the new routing may introduce a detour factor violation. The detour factor is defined as the ratio of the measured or estimated latency to the ideal latency, where the ideal latency is calculated as the shortest-path distance in the network topology multiplied by the fiber latency coefficient. If the actual routing deviates significantly from the optimal shortest path, the resulting increase in path length and transmission delay may cause the detour factor to exceed the acceptable limit. Both conditions indicate that the working ODU service path no longer satisfies the latency-related constraints specified by the SLA.
 
@@ -328,9 +354,9 @@ Possible causes at the DWDM layer: The service may experience a latency-related 
 
 Possible causes at the fiber layer: The service may experience a latency-related SLA issue following a fiber cut along the optical path that triggers a routing switch. As part of the failure recovery process, the rerouted working path may exhibit higher end-to-end latency than the original route, causing the measured latency to exceed the configured threshold. In addition, the rerouted working logical fiber may exhibit a detour factor violation. The detour factor is defined as the ratio of the measured or estimated latency to the ideal latency, where the ideal latency is calculated as the shortest-path distance in the network topology multiplied by the fiber latency coefficient. If the rerouted logical fiber deviates significantly from the optimal shortest path, the resulting increase in transmission distance and delay may cause the detour factor to exceed the acceptable limit. Both conditions indicate that the post-recovery routing no longer satisfies the latency-related constraints specified by the SLA.
 
-### Protection switching latency exceeds allowed limit
+### Protection-path latency exceeds allowed limit
 
-The service’s current protection latency exceeds the defined threshold, indicating that the end-to-end delay on the protection path is out of the acceptable range.
+The service's current protection latency exceeds the defined threshold, indicating that the end-to-end delay on the protection path is out of the acceptable range. This refers to the delay along the protection path, not the time taken to switch to it.
 
 Possible cause at the OTN layer: The service experiences a detour factor violation on the protection electrical-layer (ODU) path. The detour factor is defined as the ratio of measured or estimated latency to ideal latency, where ideal latency is calculated as the shortest network path distance between two points multiplied by the fiber latency coefficient. In this case, the protection ODU routing deviates significantly from the optimal shortest path, resulting in excessive transmission delay and causing the detour ratio to exceed the acceptable threshold.
 
@@ -338,7 +364,9 @@ Possible cause at the DWDM layer: The service experiences a detour factor violat
 
 Possible cause at the fiber layer: The service experiences a detour factor violation on the protection logical fiber path. The detour factor is defined as the ratio of measured or estimated latency to ideal latency, where the ideal latency is calculated as the shortest path distance between two points in the network topology multiplied by the fiber latency coefficient. In this case, the protection logical fiber route significantly deviates from the optimal shortest path, resulting in increased transmission delay and causing the detour ratio to exceed the acceptable threshold.
 
-# SLA Assurance Issue Management Architecture and SLA Assurance Capability
+A detour-factor violation does not by itself establish that the absolute latency objective has been exceeded; the two conditions are reported separately.
+
+# SLA Assurance Issue Management Architecture and SLA Assurance Capability {#architecture}
 
 ~~~~ ascii-art
 +-------------------------------------------------------------+
@@ -366,7 +394,7 @@ Possible cause at the fiber layer: The service experiences a detour factor viola
 
 - The Issue Server derives monitoring policies from the SLA, including the events, performance metrics, and alarms that need to be monitored, and initiates the corresponding monitoring activities.
 
-- Upon detecting an issue, the Issue Server performs issue classification, impact analysis, and resolution generation, and reports the issue to the OSS.
+- Upon detecting an issue, the Issue Server performs issue classification, impact analysis, and resolution generation, and reports the issue to the Operations Support System (OSS).
 
 - The OSS can query the Issue Server to retrieve information about identified issues, including their status, impact assessment, and recommended resolutions.
 
@@ -374,7 +402,7 @@ Possible cause at the fiber layer: The service experiences a detour factor viola
 
 It should be noted that the SLA assurance capabilities supported by Issue Servers may vary across implementations and products. Therefore, an Issue Server SHOULD provide interfaces that expose its supported capabilities and enable external systems to query such capability information.
 
-To support optical networks SLA assurance management, a unified data model is required for standardized representation. The model should support classification (issue-sla-type) and hierarchical layering (layer), where the layering follows the network architecture defined in {{ITU-T_G.709}}.
+To support SLA assurance management in optical networks, a unified data model is required for standardized representation. The model should support classification (issue-sla-type) and hierarchical layering (layer), where the layering follows the network architecture defined in {{ITU-T_G.709}}.
 
 Specifically, the optical layer includes OTS, OMS, and OCh, while the electrical layer includes OTUk and ODUk (including both higher-order and lower-order ODUk). The model should also incorporate severity labeling (severity), explicit identification of affected objects (source-objects), impacted services or objects (impacted-objects), and temporal tracking attributes such as occurrence time (occur-time) and clearance time (clear-time). In addition, each impairment instance should include a detailed description (description) and corresponding remediation or handling recommendations (suggestion), enabling consistent lifecycle tracking, analysis, and operational decision-making.
 
@@ -406,87 +434,94 @@ Specifically, the optical layer includes OTS, OMS, and OCh, while the electrical
 ~~~~
 {:#fig-sain title="Interworking with SAIN"}
 
-SAIN {{?RFC9417}} defines an architecture for network service assurance and specifies mechanisms for detecting symptoms associated with service degradation. For symptomatic issues, issue lifecycle management can leverage the capabilities provided by SAIN to support issue detection, analysis, and handling. However, SAIN does not address asymptomatic issues, since such issues do not manifest as observable service-level symptoms. Therefore, the management of asymptomatic issues requires issue lifecycle management functions to interact directly with the underlying physical network resources and associated monitoring mechanisms.
+SAIN {{?RFC9417}} defines an architecture for network service assurance and specifies mechanisms for detecting symptoms associated with service degradation. For symptomatic issues, issue lifecycle management can leverage the capabilities provided by SAIN to support issue detection, analysis, and handling. SAIN can also represent dependencies that do not affect the reported service health. Asymptomatic issues, however, may require additional information from the underlying physical network resources and associated monitoring mechanisms, such as shared routes or infrastructure, that is not part of the service health model. The division shown in {{fig-sain}} is illustrative rather than a restriction on SAIN capabilities.
 
 ## Relationship with Incident
 
 The objective of SLA assurance issue management is to prevent incidents, or reduce their occurrence, by identifying and resolving issues before they escalate into incidents. However, incidents cannot be fully prevented by issue management for several reasons. First, certain SLA terms permit temporary service outages or transient service interruptions, in which case issue handling is typically delegated to incident management. Second, an Issue Server may have limited SLA assurance capabilities, which may prevent it from detecting certain classes of issues. Therefore, issue management and incident management are complementary functions.
 
+The terminology of {{?RFC9940}} applies to this document. Mplify {{Mplify173}} and {{Mplify175}} distinguish an Issue experienced by a Buyer from an Incident record created by a Seller. An SLA assurance issue, as used in this document, is an optical-domain assurance construct: a detected condition relevant to the assessment or fulfillment of an SLA objective. It may exist without customer-visible impact and without a Seller-created Incident. The same underlying condition may subsequently be associated with an Incident when handled through incident-management processes, or with a Buyer-experienced Issue if it results in customer-visible service impact. For example, a protection-diversity risk detected in a shared trench while the service is operating normally is an SLA assurance issue; it does not imply a Buyer-experienced Issue, and whether it results in an Incident record depends on the Seller's operational process. This document does not redefine the Mplify terms.
+
 ## Interworking with ACTN framework
 
 The issue lifecycle management framework can interwork with the Abstraction and Control of Traffic Engineered Networks (ACTN) framework to support end-to-end service assurance across multi-domain transport networks. In particular, ACTN provides a hierarchical control architecture that enables coordination between customer-facing service requests and underlying network resources, while issue lifecycle management provides mechanisms for detecting, classifying, and handling SLA assurance issues.
 
-In an integrated deployment, the Issue Server may be instantiated within or alongside ACTN controllers in each domain, enabling correlation of service-level issues with underlying network conditions across multiple technology layers and administrative domains. ACTN’s provision of abstracted network views can be leveraged by issue management functions to localize the impact of detected issues and to facilitate cross-domain impact analysis.
+In an integrated deployment, the Issue Server may be instantiated within or alongside ACTN controllers in each domain, enabling correlation of service-level issues with underlying network conditions across multiple technology layers and administrative domains. ACTN's provision of abstracted network views can be leveraged by issue management functions to localize the impact of detected issues and to facilitate cross-domain impact analysis.
 
 Furthermore, issue-related information, including detected issues, their classifications, and resolution recommendations, may be exposed through ACTN interfaces to support coordinated remediation actions. Conversely, ACTN control and orchestration functions may provide topology, connectivity, and service intent information that enhances issue detection accuracy and improves root cause localization.
+
+In ACTN {{?RFC8453}}, a Provisioning Network Controller (PNC) can report domain-level observations to a Multi-Domain Service Coordinator (MDSC). This model can supply the issue information for that exchange; it does not define the corrective actions or the interfaces used to invoke them.
 
 # SLA Assurance Data Model Design
 
 ## Overview
 
-The YANG module "ietf-optical-sla-assurance" defines a data model for SLA assurance management in optical transport networks. The module provides a standard way to define, detect, and report issues that may impact service and network availability. It enables consistent modeling of assurance intent, impairment detection, and risk reporting across optical transport domains. The information reported in the SLA assurance issue includes issue identification, classification, severity, impacted objects, and remediation suggestions.
+The YANG module "ietf-optical-sla-assurance" defines a data model for SLA assurance management in optical transport networks. The module provides a standard way to represent and report issues that may impact service and network availability. It enables consistent reporting of impairments and risks across optical transport domains. The information reported in the SLA assurance issue includes issue identification, classification, severity, impacted objects, and remediation suggestions.
 
-At the top of "ietf-optical-sla-assurance " module is the SLA Assurance container. The SLA assurance issues are represented as a list and indexed by "csn" (Customer Serial Number). Each SLA assurance issue is associated with issue metadata such as issue name, type, category, layer, severity, and timing information. In addition, the module supports relationships between issues through related-issues list and identifies source objects where the issue occurs. The module also defines impacted objects (services and tunnels) that are affected by each issue.
+At the top of the "ietf-optical-sla-assurance" module is the read-only SLA assurance container ("sla"); its contents are operational state reported by the server. The SLA assurance issues are represented as a list and indexed by "csn" (Customer Serial Number). Each SLA assurance issue is associated with issue metadata such as issue name, type, category, layer, severity, and timing information. In addition, the module supports relationships between issues through related-issues list and identifies source objects where the issue occurs. The module also defines impacted objects (services and tunnels) that are affected by each issue.
 
 ~~~~ ascii-art
-   module: ietf-optical-sla-assurance
-   +--rw sla
-      +--rw issues* [csn]
-         +--rw csn                 uint64
-         +--rw issue-id?           int64
-         +--rw issue-name?         string
-         +--rw issue-sla-type?     enumeration
-         +--rw layer?              enumeration
-         +--rw issue-category?     enumeration
-         +--rw occur-time?         yang:date-and-time
-         +--rw clear-time?         yang:date-and-time
-         +--rw description?        string
-         +--rw suggestion?         string
-         +--rw severity?           enumeration
-         +--rw related-issues* [csn]
-         |  +--rw csn    uint64
-         +--rw source-objects* [object-id]
-         |  +--rw object-name?   string
-         |  +--rw object-id      yang:uuid
-         |  +--rw object-type?   string
-         +--rw issue-type?         enumeration
-         +--rw impacted-objects* [service-name tunnel-name]
-            +--rw service-name    yang:uuid
-            +--rw tunnel-name     yang:uuid
+module: ietf-optical-sla-assurance
+  +--ro sla
+     +--ro issues* [csn]
+        +--ro csn                 uint64
+        +--ro issue-id?           int64
+        +--ro issue-name?         string
+        +--ro issue-sla-type?     enumeration
+        +--ro layer?              enumeration
+        +--ro issue-category?     enumeration
+        +--ro occur-time?         yang:date-and-time
+        +--ro clear-time?         yang:date-and-time
+        +--ro description?        string
+        +--ro suggestion?         string
+        +--ro severity?           enumeration
+        +--ro related-issues* [csn]
+        |  +--ro csn    uint64
+        +--ro source-objects* [object-id]
+        |  +--ro object-name?   string
+        |  +--ro object-id      yang:uuid
+        |  +--ro object-type?   string
+        +--ro issue-type?         enumeration
+        +--ro impacted-objects* [service-name tunnel-name]
+           +--ro service-name    yang:uuid
+           +--ro tunnel-name     yang:uuid
+
+  rpcs:
+    +---x query-history-issue-statistics-by-service
+       +---w input
+       |  +---w service-name?   yang:uuid
+       |  +---w tunnel-name?    yang:uuid
+       |  +---w begin-time?     yang:date-and-time
+       |  +---w end-time?       yang:date-and-time
+       |  +---w sftp-url?       string
+       +--ro output
+          +--ro sla-issue-statistic* [service-name tunnel-name]
+             +--ro service-name    yang:uuid
+             +--ro tunnel-name     yang:uuid
+             +--ro service-pm
+                +--ro interruptions?        uint64
+                +--ro interrupt-duration?   uint64
+                +--ro availability?         decimal64
+                +--ro interrupt-history*
+                        [interrupt-begin-time interrupt-end-time]
+                   +--ro interrupt-begin-time    yang:date-and-time
+                   +--ro interrupt-end-time      yang:date-and-time
+                   +--ro interrupt-duration?     uint64
 ~~~~
 
 The issue-sla-type enumeration classifies issues into three categories based on their impact: bandwidth, availability, and delay. The layer enumeration identifies the transport layer where the issue originates, including service-layer, electrical-layer (OTN/ODU), optical-layer (DWDM/OCh), and fiber-layer. The issue-category distinguishes between fault conditions (actual failures) and risk conditions (potential failures that may lead to SLA violations).
 
 The severity enumeration provides four levels: critical, major, minor, and info, allowing operators to prioritize issue resolution. The related-issues list establishes relationships between issues, enabling correlation analysis and root cause identification. The source-objects list identifies the specific network resources where the issue manifests, with each object identified by UUID and described by name and type.
 
-The module also defines an RPC operation "query-history-issue-statistics-by-service" that allows retrieval of historical SLA issue statistics for specific services or tunnels within a specified time range. The RPC accepts service identifiers (UUIDs), time range parameters, and an optional SFTP URL for exporting results. The output provides comprehensive statistics including interruption count, total interruption duration, availability percentage, and a detailed interrupt history with begin/end times and durations.
+The module also defines an RPC operation "query-history-issue-statistics-by-service" that allows retrieval of historical SLA issue statistics for specific services or tunnels within a specified time range. The RPC accepts service identifiers (UUIDs), time range parameters, and an optional SFTP URL for exporting results. The output provides comprehensive statistics including interruption count, total interruption duration, availability percentage, and a detailed interrupt history with begin/end times and durations. Durations are expressed in milliseconds, and availability is a percentage with six decimal places so that objectives such as 99.999% can be represented.
 
 ~~~~ ascii-art
 rpcs:
-   +---x query-history-issue-statistics-by-service
-      +---w input
-      |  +---w service-name?   yang:uuid
-      |  +---w tunnel-name?    yang:uuid
-      |  +---w begin-time?     date-and-time-s
-      |  +---w end-time?       date-and-time-s
-      |  +---w sftp-url?       string
-      +--ro output
-         +--ro sla-issue-statistic* [service-name tunnel-name]
-            +--ro service-name    yang:uuid
-            +--ro tunnel-name     yang:uuid
-            +--ro service-pm
-               +--ro interruptions?        uint64
-               +--ro interrupt-duration?   uint64
-               +--ro availability?         decimal64
-               +--ro interrupt-history* [interrupt-begin-time interrupt-end-time]
-                  +--ro interrupt-begin-time    yang:date-and-time
-                  +--ro interrupt-end-time      yang:date-and-time
-                  +--ro interrupt-duration?     uint64
 ~~~~
 
 The model is designed to support closed-loop operations for SLA assurance in optical transport networks. It enables automated monitoring systems to detect issues, classify them according to SLA impact, and initiate appropriate remediation actions. The separation between symptomatic issues (actual service degradation) and asymptomatic issues (risk conditions that may lead to future SLA violations) allows for proactive assurance management, helping to prevent incidents before they occur.
 
-The module follows YANG 1.1 specification and imports standard YANG types from ietf-yang-types. It defines custom groupings for reusable issue attributes (issue-base) and complete issue definitions (issue), promoting modularity and consistency across different implementations. The use of UUID for service and tunnel identifiers ensures global uniqueness and facilitates integration with other management systems.
+The module follows YANG 1.1 {{!RFC7950}} and imports common types from ietf-yang-types {{RFC9911}}. It defines custom groupings for reusable issue attributes (issue-base) and complete issue definitions (issue), promoting modularity and consistency across different implementations. The use of UUID for service and tunnel identifiers ensures global uniqueness and facilitates integration with other management systems.
 
 This data model is intended to be used by network management systems, orchestration platforms, and assurance analytics engines in optical transport network environments. It provides a standardized representation of SLA assurance issues that can be exchanged between different vendor equipment and management systems, enabling multi-vendor interoperability and consistent SLA management across heterogeneous optical transport networks.
 
@@ -494,9 +529,9 @@ This data model is intended to be used by network management systems, orchestrat
 
 SLA assurance issue identification is the process of detecting and categorizing network conditions that may impact service performance, availability, or reliability. The YANG model provides a structured framework for representing identified issues with comprehensive observability attributes that enable effective monitoring, analysis, and remediation.
 
-Each SLA assurance issue is uniquely identified by a Customer Serial Number (CSN), which serves as the primary key in the issues list. The CSN is a 64-bit unsigned integer that provides a globally unique identifier for each issue within a management domain. In addition to the CSN, issues may optionally include an issue-id (64-bit signed integer) for legacy compatibility or cross-system referencing, and a human-readable issue-name (string up to 1000 characters) for operator identification and documentation.
+Each SLA assurance issue is uniquely identified by a Customer Serial Number (CSN), which serves as the primary key in the issues list. The CSN is a 64-bit unsigned integer that is unique within the reporting server. In addition to the CSN, issues may optionally include an issue-id (64-bit signed integer) for legacy compatibility or cross-system referencing, and a human-readable issue-name (string up to 1000 characters) for operator identification and documentation.
 
-Observability of issues is enhanced through temporal and descriptive attributes. The occur-time attribute records when the issue was first detected or identified, using the yang:date-and-time type for precise timestamping. The clear-time attribute records when the issue was resolved or cleared, enabling calculation of issue duration and trend analysis. For issues that represent persistent conditions rather than events, the clear-time may be unset until resolution.
+Observability of issues is enhanced through temporal and descriptive attributes. The occur-time attribute records when the issue was first detected or identified, using the yang:date-and-time type for precise timestamping. The clear-time attribute records when the issue was resolved or cleared, enabling calculation of issue duration and trend analysis. The clear-time is unset while an issue is current.
 
 ## SLA assurance issue resolution and capability list
 
@@ -506,20 +541,36 @@ Issue resolution typically follows a structured workflow: detection, classificat
 
 The SLA assurance capability list represents the set of issue types that a management system can detect, analyze, and resolve. This capability is measured by the comprehensiveness of the issue catalog and the effectiveness of the resolution mechanisms. The YANG model's issue-sla-type and issue-category enumerations provide the framework for organizing this capability list, which can be extended with specific issue instances through the issue-name and description attributes.
 
+## Items for Further Discussion
+
+Editor's note: the following points are under discussion and are expected to be resolved, with corresponding changes to the YANG module, in a future revision. This section will be removed before publication.
+
+- Service and tunnel identification: the impacted-objects and statistics lists are keyed by both service-name and tunnel-name, so an issue affecting only a service, or only a tunnel, cannot currently be represented.
+
+- Issue types: the issue catalogue in {{sla-assurance-issues}} is more specific than the issue-sla-type and issue-category enumerations. A machine-readable, extensible issue-type definition is being considered so that clients need not interpret the issue-name.
+
+- Statistics semantics: the rules for counting overlapping interruptions, handling interruptions that span the observation window, excluding planned maintenance, and reporting incomplete measurement coverage need to be specified.
+
+- SFTP export: the file format, completion and error reporting for the sftp-url parameter need to be specified, or the parameter removed.
+
+- Capability discovery and issue resolution: the architecture in {{architecture}} describes capability exposure and resolution operations that the module does not yet define.
+
 # SLA Assurance YANG module
 
 ~~~~ yang
 {::include yang/ietf-optical-sla-assurance.yang}
 ~~~~
-{: sourcecode-markers="true" sourcecode-name="ietf-optical-sla-assurance@2026-07-02.yang"}
+{: sourcecode-markers="true" sourcecode-name="ietf-optical-sla-assurance@2026-10-13.yang"}
 
 # Security Considerations
 
-The YANG module specified in this document defines a data model for SLA assurance management in optical transport networks. The module is designed to be accessed via YANG-based management protocols, such as NETCONF {{!RFC6241}} and RESTCONF {{!RFC8040}}. These YANG-based management protocols (1) have to use a secure transport layer (e.g., SSH {{!RFC4252}}, TLS {{!RFC8446}}, and QUIC {{!RFC9000}}) and (2) have to use mutual authentication.
+The YANG module specified in this document defines a data model for SLA assurance management in optical transport networks. The module is designed to be accessed via YANG-based management protocols, such as NETCONF {{!RFC6241}} and RESTCONF {{!RFC8040}}. These YANG-based management protocols (1) have to use a secure transport layer (e.g., SSH {{!RFC4252}}, TLS {{!RFC9846}}, and QUIC {{!RFC9000}}) and (2) have to use mutual authentication.
+
+The issue inventory defined by this module is operational state and contains no configuration nodes. Access control is nevertheless needed for read operations and for the statistics RPC.
 
 The Network Configuration Access Control Model (NACM) {{!RFC8341}} provides the means to restrict access for particular NETCONF or RESTCONF users to a preconfigured subset of all available NETCONF or RESTCONF protocol operations and content.
 
-Some of the readable data nodes in this YANG module may be considered sensitive or vulnerable in some network environments. It is thus important to control read access (e.g., via get, get-config, or notification) to these data nodes. These are the subtrees and data nodes and their sensitivity/vulnerability:
+Some of the readable data nodes in this YANG module may be considered sensitive or vulnerable in some network environments. It is thus important to control read access (e.g., via get or another state-data retrieval mechanism) to these data nodes. These are the subtrees and data nodes and their sensitivity/vulnerability:
 
 '/sla/issues': This list specifies the SLA assurance issue entries for optical transport networks. Unauthorized read access of this list can allow intruders to access SLA assurance information and potentially get a picture of the health and resilience status of the optical transport network. Intruders may exploit the vulnerabilities revealed in the issue data, including source-objects and impacted-objects, to lead to further negative impact on the network. Care must be taken to ensure that this list is accessed only by authorized users.
 
@@ -533,7 +584,7 @@ Some of the RPC operations in this YANG module may be considered sensitive or vu
 
 IANA is requested to register the following URI in the "ns" registry within the "IETF XML Registry" group {{!RFC3688}}:
 
-URI: urn:ietf:params:xml:ns:yang:hnts
+URI: urn:ietf:params:xml:ns:yang:ietf-optical-sla-assurance
 
 Registrant Contact: The IESG.
 
@@ -560,4 +611,4 @@ Reference:  RFC XXXX
 # Acknowledgments
 {:numbered="false"}
 
-The authors would like to thank Yanlei Zheng, Italo Busi for their valuable comments and great input to this work.
+The authors would like to thank Yanlei Zheng, Italo Busi, and Christian Dieckhoff for their valuable comments and input to this work.
